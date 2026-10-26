@@ -1,0 +1,6 @@
+{
+  "name": "Hayleys Group Loyalty App",
+  "description": "Clickable mobile loyalty prototype for Hayleys Group Sri Lanka showcasing Scenario 1: One Group-Wide Wallet across Retail, Leisure, Travels, and Mobility.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
