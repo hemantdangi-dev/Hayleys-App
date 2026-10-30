@@ -25,6 +25,8 @@ import { SupportModal } from './components/modals/SupportModal';
 import { FamilyAccountModal } from './components/modals/FamilyAccountModal';
 import { ScanQRModal } from './components/modals/ScanQRModal';
 import { GamificationModal } from './components/modals/GamificationModal';
+import { VouchersModal } from './components/modals/VouchersModal';
+import { PromotionDetailModal } from './components/modals/PromotionDetailModal';
 
 const AppContent: React.FC = () => {
   const { isLoggedIn, activeTab } = useLoyalty();
@@ -89,6 +91,8 @@ const AppContent: React.FC = () => {
       <FamilyAccountModal />
       <ScanQRModal />
       <GamificationModal />
+      <VouchersModal />
+      <PromotionDetailModal />
     </div>
   );
 };

@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenStoreLocator }) => {
       title: 'Kingsbury Dining Privilege Ready',
       time: '1 day ago',
       unread: true,
-      desc: 'Your Emerald tier unlocks 20% off food bills at The Ocean & The Grill.',
+      desc: 'Your Silver tier unlocks 15% off food bills at The Ocean & The Grill.',
     },
     {
       id: 'N-3',

@@ -21,7 +21,7 @@ export const DigitalCardModal: React.FC = () => {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span className="text-xs font-semibold tracking-wide uppercase text-emerald-300">
-              Hayleys Emerald Pass
+              Hayleys {customer.tier} Pass
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -60,7 +60,9 @@ export const DigitalCardModal: React.FC = () => {
               {customer.name}
             </h2>
             <div className="flex items-center justify-center gap-2 mt-1 text-xs text-emerald-500 font-medium">
-              <span>{customer.tier} Tier</span>
+              <span className="font-bold text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-700">
+                {customer.tier} Tier
+              </span>
               <span>·</span>
               <span>Member Since {customer.joinedYear}</span>
             </div>
@@ -150,19 +152,13 @@ export const DigitalCardModal: React.FC = () => {
               </text>
             </svg>
 
-            {/* Barcode strip below */}
-            <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-col items-center">
-              <div className="flex items-center justify-center gap-1 h-7">
-                {[3, 1, 2, 1, 4, 1, 2, 3, 1, 2, 1, 3, 2, 1, 4, 2, 1, 2, 3, 1, 2].map((w, i) => (
-                  <div
-                    key={i}
-                    style={{ width: `${w * 1.5}px` }}
-                    className="h-full bg-slate-900 rounded-xs"
-                  />
-                ))}
-              </div>
-              <span className="text-[10px] font-mono text-slate-500 mt-0.5">
+            {/* Clean QR details below (barcode removed) */}
+            <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between px-2 text-[11px]">
+              <span className="font-mono font-bold text-slate-800 tracking-wider">
                 {customer.membershipId}
+              </span>
+              <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                QR Pass
               </span>
             </div>
           </div>

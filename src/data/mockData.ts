@@ -10,12 +10,13 @@ import {
   Mission,
   AchievementBadge,
   StoreLocation,
+  SupportTicket,
 } from '../types';
 
 export const INITIAL_CUSTOMER: CustomerProfile = {
   name: 'Nimal Perera',
   membershipId: 'HLY-20487619',
-  tier: 'Emerald',
+  tier: 'Silver',
   joinedYear: 2021,
   phone: '+94 77 234 4821',
   email: 'nimal.perera@example.lk',
@@ -65,7 +66,7 @@ export const INITIAL_CHANGE_MONEY_LEDGER: ChangeMoneyTransaction[] = [
 export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'TXN-9021',
-    description: 'Supermarket weekly grocery & fresh produce',
+    description: 'Supermarket weekly grocery & fresh produce (Silver 10% bonus points)',
     businessUnit: 'RETAIL',
     date: '25 Oct 2026',
     time: '17:35',
@@ -78,7 +79,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-8842',
-    description: 'Weekend resort getaway & dining',
+    description: 'The Kingsbury Hotel Colombo - Weekend dining (Silver 1.1x earn rate)',
     businessUnit: 'LEISURE',
     date: '21 Oct 2026',
     time: '14:20',
@@ -91,7 +92,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-8510',
-    description: 'Bespoke holiday tour booking deposit',
+    description: 'Hayleys Travels & Tours - Bespoke holiday deposit (Silver Member Privilege)',
     businessUnit: 'TRAVELS',
     date: '15 Oct 2026',
     time: '11:05',
@@ -104,7 +105,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-8120',
-    description: 'Executive airport transfer service',
+    description: 'Hayleys Advantis Fleet - Airport transfer (Silver Member rate)',
     businessUnit: 'MOBILITY',
     date: '08 Oct 2026',
     time: '08:50',
@@ -117,7 +118,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-7940',
-    description: 'Supermarket specialty groceries & Ceylon tea',
+    description: 'Hayleys Supermarket Kandy - Specialty groceries & tea (Silver points accrual)',
     businessUnit: 'RETAIL',
     date: '29 Sep 2026',
     time: '19:10',
@@ -130,7 +131,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-7512',
-    description: 'Pantry restocking & household staples',
+    description: 'Hayleys Retail Supermarket - Pantry restocking (Silver Tier qualification)',
     businessUnit: 'RETAIL',
     date: '12 Sep 2026',
     time: '16:04',
@@ -145,6 +146,20 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
 
 export const INITIAL_VOUCHERS: Voucher[] = [
   {
+    id: 'VCH-FB1000',
+    code: 'HLY-HOTEL-FB1000',
+    rewardId: 'REW-LEI-FB1000',
+    rewardName: 'Hotel F&B LKR 1000 Off',
+    businessUnit: 'LEISURE',
+    pointsSpent: 100,
+    issuedDate: '28 Oct 2026',
+    expiryDate: '31 Dec 2026',
+    status: 'ACTIVE',
+    qrValue: 'VCH-HLY-HOTEL-FB1000-SECURE',
+    outletInstructions: 'Present QR barcode at The Kingsbury Colombo or Amaya Resorts & Spas restaurants for LKR 1,000 off food & beverage bill.',
+    image: '/src/assets/images/hotel_fb_dining_1793353346542.jpg',
+  },
+  {
     id: 'VCH-401',
     code: 'HLY-RET-2026-X19',
     rewardId: 'REW-RET-01',
@@ -156,6 +171,7 @@ export const INITIAL_VOUCHERS: Voucher[] = [
     status: 'ACTIVE',
     qrValue: 'VCH-HLY-RET-X19-SECURE',
     outletInstructions: 'Present QR barcode at any Hayleys Retail Supermarket checkout before billing.',
+    image: '/src/assets/images/hayleys_retail_supermarket_1792998392386.jpg',
   },
   {
     id: 'VCH-402',
@@ -169,24 +185,29 @@ export const INITIAL_VOUCHERS: Voucher[] = [
     status: 'ACTIVE',
     qrValue: 'VCH-HLY-LEI-B88-SECURE',
     outletInstructions: 'Valid at The Gourmet / Ocean Restaurant, The Kingsbury Colombo. Prior table reservation required.',
-  },
-  {
-    id: 'VCH-403',
-    code: 'HLY-MOB-2026-M42',
-    rewardId: 'REW-MOB-02',
-    rewardName: 'Airport Chauffeur Fast-Track Credit (LKR 3,000)',
-    businessUnit: 'MOBILITY',
-    pointsSpent: 300,
-    issuedDate: '20 Oct 2026',
-    expiryDate: '20 Nov 2026',
-    status: 'ACTIVE',
-    qrValue: 'VCH-HLY-MOB-M42-SECURE',
-    outletInstructions: 'Quote code when booking through Hayleys Advantis Executive Desk or app.',
+    image: '/src/assets/images/kingsbury_high_tea_1793353360926.jpg',
   },
 ];
 
 export const ALL_REWARDS: Reward[] = [
   // LEISURE (Primary Cross-Redemption Demo!)
+  {
+    id: 'REW-LEI-FB1000',
+    name: 'Hotel F&B LKR 1,000 Off Voucher',
+    businessUnit: 'LEISURE',
+    category: 'Dining',
+    pointsRequired: 100,
+    originalValueLKR: 1000,
+    image: '/src/assets/images/hotel_fb_dining_1793353346542.jpg',
+    description: 'Instant LKR 1,000 dining & bar credit at The Kingsbury Colombo and Amaya Resorts & Spas.',
+    terms: [
+      'Valid on food and beverage bills at participating hotel restaurants',
+      'Valid for 90 days from redemption',
+      'Applicable on Silver, Gold, and Platinum tiers',
+    ],
+    eligibilityNote: 'Cross-business redemption available.',
+    featured: true,
+  },
   {
     id: 'REW-LEI-01',
     name: 'Hotel Dining Voucher (LKR 8,000)',
@@ -202,7 +223,7 @@ export const ALL_REWARDS: Reward[] = [
       'Cannot be combined with other promotional food & beverage discounts',
       'Advance table booking recommended',
     ],
-    eligibilityNote: 'Eligible for all Emerald, Emerald Executive, and President\'s Club members with points earned from any participating Hayleys sector.',
+    eligibilityNote: 'Eligible for all Silver, Gold, and Platinum members with points earned from any participating Hayleys sector.',
     featured: true,
   },
   {
@@ -359,6 +380,25 @@ export const ALL_REWARDS: Reward[] = [
 
 export const ALL_OFFERS: Offer[] = [
   {
+    id: 'OFF-BUY2-GET100',
+    title: 'Buy 2, get 100 - Promotion',
+    businessUnit: 'RETAIL',
+    discountOrBonus: '+100 Pts',
+    category: 'Promotional',
+    validUntil: '31 Dec 2026',
+    image: '/src/assets/images/promo_buy2_get100_1793353331701.jpg',
+    description: 'Buy any 2 qualifying items across Hayleys Retail Supermarkets and instantly receive 100 bonus loyalty points credited to your Silver card account.',
+    isForYou: true,
+    isMemberOnly: true,
+    terms: [
+      'Purchase any 2 eligible packaged goods or grocery items at any Hayleys Retail store',
+      '100 bonus loyalty points credited automatically upon checkout scanning',
+      'Valid for Silver, Gold, and Platinum tier members',
+      'Bonus points qualify for cross-redemption across Leisure, Travels, and Mobility',
+    ],
+    code: 'BUY2-GET100',
+  },
+  {
     id: 'OFF-01',
     title: 'Double Points Weekend at Hayleys Retail',
     businessUnit: 'RETAIL',
@@ -380,11 +420,11 @@ export const ALL_OFFERS: Offer[] = [
     category: 'Privilege',
     validUntil: '15 Nov 2026',
     image: '/src/assets/images/hayleys_leisure_resort_1792998393316.jpg',
-    description: 'Exclusive 20% savings on total food bill at Ocean Seafood Restaurant and The Grill for Hayleys Emerald members.',
+    description: 'Exclusive 15% savings on total food bill at Ocean Seafood Restaurant and The Grill for Hayleys Silver members.',
     isForYou: true,
     isMemberOnly: true,
     terms: ['Present membership card on arrival', 'Excludes alcoholic beverages and public holidays'],
-    code: 'KB-EMERALD20',
+    code: 'KB-SILVER15',
   },
   {
     id: 'OFF-03',
@@ -565,4 +605,30 @@ export const INITIAL_BADGES: AchievementBadge[] = [
     sectorTag: 'MOBILITY',
   },
 ];
+
+export const INITIAL_SUPPORT_TICKETS: SupportTicket[] = [
+  {
+    id: 'CAS-2026-89412',
+    date: '28 Oct 2026',
+    subject: 'Missing Points: Kollupitiya Supermarket fresh produce invoice',
+    category: 'MISSING_POINTS',
+    transactionRef: 'REC-RET-9021',
+    message: 'Purchased groceries worth LKR 17,500. Receipt submitted for verification of 350 loyalty points.',
+    status: 'RESOLVED',
+    priority: 'NORMAL',
+    resolutionNotes: 'Receipt verified with Hayleys Retail Kollupitiya POS system. 350 points successfully credited to shared wallet.',
+  },
+  {
+    id: 'CAS-2026-92184',
+    date: '29 Oct 2026',
+    subject: 'Change Money: Cash change round-up verification (LKR 80.00)',
+    category: 'CHANGE_MONEY',
+    transactionRef: 'CM-1002',
+    message: 'Cashier rounded up cash change at checkout counter 3. Requesting ledger confirmation.',
+    status: 'IN_REVIEW',
+    priority: 'URGENT',
+    resolutionNotes: 'Case assigned to Retail POS reconciliation officer. Store verification in progress.',
+  },
+];
+
 

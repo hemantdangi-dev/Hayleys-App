@@ -206,25 +206,31 @@ export const WalletScreen: React.FC = () => {
             <div
               key={v.id}
               onClick={() => setSelectedVoucher(v)}
-              className="p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-400 transition-all cursor-pointer shadow-xs space-y-2"
+              className="p-3 rounded-2xl border border-slate-200 bg-white hover:border-emerald-400 transition-all cursor-pointer shadow-xs flex items-center justify-between gap-3 group"
             >
-              <div className="flex items-start justify-between gap-2">
-                <div>
+              <div className="flex items-center gap-3 min-w-0">
+                <img
+                  src={v.image || '/src/assets/images/hayleys_retail_supermarket_1792998392386.jpg'}
+                  alt={v.rewardName}
+                  referrerPolicy="no-referrer"
+                  className="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-200 group-hover:scale-105 transition-transform"
+                />
+                <div className="min-w-0">
                   <span className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider">
                     {v.businessUnit} REWARD
                   </span>
-                  <h4 className="font-bold text-xs text-slate-900 mt-0.5">
+                  <h4 className="font-bold text-xs text-slate-900 truncate mt-0.5">
                     {v.rewardName}
                   </h4>
-                </div>
-                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 shrink-0">
-                  <QrCode className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono mt-1">
+                    <strong className="text-slate-800">{v.code}</strong>
+                    <span>·</span>
+                    <span className="text-emerald-700 font-semibold">Exp: {v.expiryDate}</span>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-100 font-mono text-slate-500">
-                <span>Code: <strong className="text-slate-800">{v.code}</strong></span>
-                <span className="text-emerald-700 font-semibold">Active · Exp: {v.expiryDate}</span>
+              <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 shrink-0 group-hover:bg-emerald-50 group-hover:text-emerald-700 transition-colors">
+                <QrCode className="w-4 h-4" />
               </div>
             </div>
           ))}
@@ -234,7 +240,7 @@ export const WalletScreen: React.FC = () => {
       {/* Voucher Detail Modal */}
       {selectedVoucher && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-5 shadow-2xl space-y-4 text-center">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-5 shadow-2xl space-y-4 text-center overflow-hidden">
             <div className="flex justify-between items-center border-b border-slate-100 pb-2">
               <span className="text-xs uppercase font-bold text-emerald-800">
                 {selectedVoucher.businessUnit} VOUCHER
@@ -245,6 +251,22 @@ export const WalletScreen: React.FC = () => {
               >
                 Close
               </button>
+            </div>
+
+            {/* Photo in Voucher Detail Modal */}
+            <div className="relative aspect-16/9 w-full rounded-2xl overflow-hidden bg-slate-100 shadow-inner">
+              <img
+                src={selectedVoucher.image || '/src/assets/images/hayleys_retail_supermarket_1792998392386.jpg'}
+                alt={selectedVoucher.rewardName}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-2 left-3 right-3 text-white text-left">
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded">
+                  {selectedVoucher.businessUnit}
+                </span>
+              </div>
             </div>
 
             <div>

@@ -99,7 +99,7 @@ export const GamificationModal: React.FC = () => {
     }
   };
 
-  // Tier progression math: Emerald -> Emerald Executive (3,000 pts target)
+  // Tier progression math: Silver -> Gold (3,000 pts target)
   const nextTierTarget = 3000;
   const currentPoints = wallet.availablePoints;
   const tierProgressPercent = Math.min(100, Math.round((currentPoints / nextTierTarget) * 100));
@@ -375,33 +375,33 @@ export const GamificationModal: React.FC = () => {
           {activeTab === 'TIER' && (
             <div className="space-y-4">
               {/* Current Tier Status Card */}
-              <div className="p-4 bg-gradient-to-br from-emerald-900 to-slate-900 text-white rounded-2xl border border-emerald-700/50 space-y-3">
+              <div className="p-4 bg-gradient-to-br from-slate-800 via-slate-900 to-zinc-950 text-white rounded-2xl border border-slate-700/60 space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">
+                    <span className="text-[10px] uppercase font-bold text-slate-300 tracking-wider">
                       Current Membership Tier
                     </span>
                     <h3 className="text-lg font-extrabold text-white">{customer.tier} Member</h3>
                   </div>
-                  <span className="text-xs bg-emerald-800 text-emerald-200 px-2 py-1 rounded-md font-bold">
-                    Tier 1 · Active
+                  <span className="text-xs bg-slate-700 text-slate-200 px-2 py-1 rounded-md font-bold border border-slate-600">
+                    Silver · Active
                   </span>
                 </div>
 
-                {/* Progress bar to Emerald Executive */}
+                {/* Progress bar to Gold Tier */}
                 <div className="space-y-1.5 pt-1">
-                  <div className="flex justify-between text-xs text-emerald-200">
-                    <span>Next: <strong>Emerald Executive</strong></span>
+                  <div className="flex justify-between text-xs text-slate-300">
+                    <span>Next: <strong>Gold Tier</strong></span>
                     <span className="font-mono font-bold">{currentPoints} / {nextTierTarget} pts</span>
                   </div>
-                  <div className="w-full bg-emerald-950 h-2.5 rounded-full overflow-hidden border border-emerald-700/40">
+                  <div className="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-700/60">
                     <div
-                      className="bg-gradient-to-r from-emerald-400 to-amber-300 h-full rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-slate-400 via-emerald-400 to-amber-300 h-full rounded-full transition-all duration-500"
                       style={{ width: `${tierProgressPercent}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-[11px] text-emerald-300/80">
-                    <span>{pointsRemaining} pts needed to upgrade</span>
+                  <div className="flex justify-between text-[11px] text-slate-400">
+                    <span>{pointsRemaining} pts needed to upgrade to Gold</span>
                     <span>{tierProgressPercent}% unlocked</span>
                   </div>
                 </div>
@@ -413,9 +413,9 @@ export const GamificationModal: React.FC = () => {
 
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900">Emerald Executive (At 3,000 pts)</span>
+                    <span className="font-bold text-slate-900">Gold Tier (At 3,000 pts)</span>
                     <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                      550 pts away
+                      {pointsRemaining} pts away
                     </span>
                   </div>
                   <ul className="text-[11px] text-slate-600 space-y-1 pl-4 list-disc">
@@ -427,7 +427,7 @@ export const GamificationModal: React.FC = () => {
 
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 opacity-70 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900">President’s Club (At 6,000 pts)</span>
+                    <span className="font-bold text-slate-900">Platinum Tier (At 6,000 pts)</span>
                     <Lock className="w-3.5 h-3.5 text-slate-400" />
                   </div>
                   <ul className="text-[11px] text-slate-500 space-y-1 pl-4 list-disc">

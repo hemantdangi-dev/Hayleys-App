@@ -24,9 +24,11 @@ export const ProfileScreen: React.FC = () => {
     setLanguage,
     setIsFamilyModalOpen,
     setIsStoreLocatorOpen,
-    setIsSupportModalOpen,
+    openSupportModal,
+    supportTickets,
     resetDemoData,
     setIsLoggedIn,
+    setIsGamificationOpen,
   } = useLoyalty();
 
   const t = translations[language];
@@ -61,7 +63,7 @@ export const ProfileScreen: React.FC = () => {
 
       {/* Member Profile Card */}
       <div className="p-4 bg-white rounded-3xl border border-slate-200 shadow-xs flex items-center gap-3.5">
-        <div className="w-13 h-13 rounded-2xl bg-emerald-800 text-white flex items-center justify-center font-extrabold text-lg shrink-0">
+        <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white flex items-center justify-center font-extrabold text-lg shrink-0 border border-slate-600 shadow-xs">
           NP
         </div>
         <div className="flex-1 min-w-0">
@@ -69,8 +71,8 @@ export const ProfileScreen: React.FC = () => {
             <h2 className="font-extrabold text-sm text-slate-900 truncate">
               {customer.name}
             </h2>
-            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-              {customer.tier}
+            <span className="text-[10px] font-extrabold text-slate-700 bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300 shadow-2xs">
+              Silver Tier
             </span>
           </div>
           <div className="text-xs text-slate-500 font-mono mt-0.5">
@@ -80,6 +82,25 @@ export const ProfileScreen: React.FC = () => {
             +94 77 ••• •821 · Member since {customer.joinedYear}
           </div>
         </div>
+      </div>
+
+      {/* Silver Tier Privileges Banner */}
+      <div className="p-3.5 bg-gradient-to-r from-slate-50 via-slate-100 to-slate-50 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between gap-3 text-xs">
+        <div className="space-y-0.5 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="font-extrabold text-slate-900 text-xs">Silver Member Privileges</span>
+            <span className="text-[9px] font-bold text-slate-600 bg-white px-1.5 py-0.2 rounded-sm border border-slate-300">Active</span>
+          </div>
+          <p className="text-[11px] text-slate-500 truncate">
+            10% bonus points on Retail · 1.1x Leisure dining · 550 pts to Gold
+          </p>
+        </div>
+        <button
+          onClick={() => setIsGamificationOpen(true)}
+          className="shrink-0 px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-lg text-[11px] font-bold transition-colors cursor-pointer"
+        >
+          Tier Roadmap →
+        </button>
       </div>
 
       {/* Language Switcher Section */}
@@ -152,19 +173,24 @@ export const ProfileScreen: React.FC = () => {
           <ChevronRight className="w-4 h-4 text-slate-400" />
         </button>
 
-        {/* Help & Support */}
+        {/* Support Cases & Help Desk */}
         <button
-          onClick={() => setIsSupportModalOpen(true)}
+          onClick={() => openSupportModal('TRACK')}
           className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-              <HelpCircle className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+              <HelpCircle className="w-4 h-4 text-emerald-700" />
             </div>
             <div>
-              <span className="font-bold text-slate-900 block">Help & Missing Points</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-slate-900 block">Support Cases & Concierge Desk</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                  {supportTickets.length} Cases
+                </span>
+              </div>
               <span className="text-[11px] text-slate-500">
-                FAQs, missing point receipt claims, and concierge desk
+                Log new claims, missing points, and track ticket resolutions
               </span>
             </div>
           </div>

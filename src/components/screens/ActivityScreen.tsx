@@ -18,7 +18,7 @@ import { BusinessUnit, Transaction, TransactionType } from '../../types';
 import { translations } from '../../translations';
 
 export const ActivityScreen: React.FC = () => {
-  const { transactions, language } = useLoyalty();
+  const { transactions, language, customer } = useLoyalty();
   const t = translations[language];
 
   const [typeFilter, setTypeFilter] = useState<'ALL' | TransactionType>('ALL');
@@ -182,6 +182,12 @@ export const ActivityScreen: React.FC = () => {
                 <div className="flex justify-between">
                   <span className="text-slate-500">Sector:</span>
                   <span className="font-bold text-emerald-800 uppercase">{selectedTxn.businessUnit}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Tier Status:</span>
+                  <span className="font-bold text-slate-800">
+                    {customer.name} ({customer.tier} Member)
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Points Movement:</span>

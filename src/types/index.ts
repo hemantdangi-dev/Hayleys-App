@@ -5,7 +5,7 @@ export type Language = 'EN' | 'SI' | 'TA';
 export interface CustomerProfile {
   name: string;
   membershipId: string;
-  tier: 'Emerald' | 'Emerald Executive' | 'President\'s Club';
+  tier: 'Silver' | 'Gold' | 'Platinum' | 'Emerald' | 'Emerald Executive' | "President's Club";
   joinedYear: number;
   phone: string;
   email: string;
@@ -77,6 +77,7 @@ export interface Voucher {
   status: 'ACTIVE' | 'USED' | 'EXPIRED';
   qrValue: string;
   outletInstructions: string;
+  image?: string;
 }
 
 export interface Offer {
@@ -138,4 +139,8 @@ export interface SupportTicket {
   transactionRef?: string;
   message: string;
   status: 'RECEIVED' | 'IN_REVIEW' | 'RESOLVED';
+  priority?: 'NORMAL' | 'URGENT';
+  resolutionNotes?: string;
+  attachmentName?: string;
+  updatedAt?: string;
 }

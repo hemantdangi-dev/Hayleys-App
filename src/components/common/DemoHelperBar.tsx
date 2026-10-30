@@ -32,6 +32,7 @@ export const DemoHelperBar: React.FC<DemoHelperBarProps> = ({
     setIsDigitalCardOpen,
     setIsScanQROpen,
     setIsGamificationOpen,
+    openSupportModal,
     language,
     setLanguage,
   } = useLoyalty();
@@ -134,6 +135,16 @@ export const DemoHelperBar: React.FC<DemoHelperBarProps> = ({
             title="Open cross-business redemption at Leisure"
           >
             <span>Demo Redeem</span>
+          </button>
+
+          {/* Quick Support Case Desk Trigger */}
+          <button
+            onClick={() => openSupportModal('CREATE')}
+            className="flex items-center gap-1 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 rounded-md transition-colors font-medium cursor-pointer"
+            title="Open Support & Member Cases Desk"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>Case Desk</span>
           </button>
 
           {/* 7-Min Demo Guide Toggle */}

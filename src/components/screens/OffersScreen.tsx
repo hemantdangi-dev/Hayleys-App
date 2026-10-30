@@ -5,7 +5,7 @@ import { BusinessUnit, Offer } from '../../types';
 import { translations } from '../../translations';
 
 export const OffersScreen: React.FC = () => {
-  const { offers, language, startCrossBusinessRedemption } = useLoyalty();
+  const { customer, offers, language, startCrossBusinessRedemption } = useLoyalty();
   const t = translations[language];
 
   const [selectedBU, setSelectedBU] = useState<'ALL' | BusinessUnit>('ALL');
@@ -103,7 +103,7 @@ export const OffersScreen: React.FC = () => {
               </p>
 
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span className="text-slate-400 font-medium">Emerald Member Privilege</span>
+                <span className="text-slate-400 font-medium">{customer.tier} Member Privilege</span>
                 <span className="font-bold text-emerald-700 group-hover:underline">
                   View Terms & Redeem →
                 </span>

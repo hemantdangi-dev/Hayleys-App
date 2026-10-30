@@ -23,6 +23,7 @@ import {
   ALL_OFFERS,
   INITIAL_MISSIONS,
   INITIAL_BADGES,
+  INITIAL_SUPPORT_TICKETS,
 } from '../data/mockData';
 
 interface LoyaltyContextType {
@@ -45,6 +46,10 @@ interface LoyaltyContextType {
   // Modal states
   isDigitalCardOpen: boolean;
   setIsDigitalCardOpen: (open: boolean) => void;
+  isVouchersModalOpen: boolean;
+  setIsVouchersModalOpen: (open: boolean) => void;
+  selectedPromotion: Offer | null;
+  setSelectedPromotion: (offer: Offer | null) => void;
   isRedemptionModalOpen: boolean;
   setIsRedemptionModalOpen: (open: boolean) => void;
   redemptionTargetBU: BusinessUnit | null;
@@ -55,6 +60,9 @@ interface LoyaltyContextType {
   setIsStoreLocatorOpen: (open: boolean) => void;
   isSupportModalOpen: boolean;
   setIsSupportModalOpen: (open: boolean) => void;
+  supportModalTab: 'CREATE' | 'TRACK' | 'FAQ';
+  setSupportModalTab: (tab: 'CREATE' | 'TRACK' | 'FAQ') => void;
+  openSupportModal: (tab?: 'CREATE' | 'TRACK' | 'FAQ') => void;
   isFamilyModalOpen: boolean;
   setIsFamilyModalOpen: (open: boolean) => void;
   isScanQROpen: boolean;
@@ -73,21 +81,44 @@ interface LoyaltyContextType {
   redeemReward: (reward: Reward) => { success: boolean; error?: string; voucher?: Voucher; newBalance?: number };
   simulateEarn: (bu: BusinessUnit, points: number, desc: string, qualifyingSpend?: number) => void;
   markVoucherUsed: (voucherId: string) => void;
-  submitSupportTicket: (category: SupportTicket['category'], subject: string, message: string, transactionRef?: string) => string;
+  submitSupportTicket: (
+    category: SupportTicket['category'],
+    subject: string,
+    message: string,
+    transactionRef?: string,
+    priority?: 'NORMAL' | 'URGENT',
+    attachmentName?: string
+  ) => string;
+  updateTicketStatus: (ticketId: string, status: SupportTicket['status'], resolutionNotes?: string) => void;
   resetDemoData: () => void;
   startCrossBusinessRedemption: (preferredBU?: BusinessUnit) => void;
 }
 
-const STORAGE_KEY = 'hayleys_loyalty_state_v1';
+const STORAGE_KEY = 'hayleys_loyalty_state_v7';
 
 const LoyaltyContext = createContext<LoyaltyContextType | undefined>(undefined);
 
 export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Load saved state or use initial mock data
+  // Load saved state or use initial mock data with strict Silver tier enforcement
   const [customer, setCustomer] = useState<CustomerProfile>(() => {
     try {
-      const saved = localStorage.getItem(`${STORAGE_KEY}_customer`);
-      return saved ? JSON.parse(saved) : INITIAL_CUSTOMER;
+      const saved =
+        localStorage.getItem(`${STORAGE_KEY}_customer`) ||
+        localStorage.getItem('hayleys_loyalty_state_v6_customer') ||
+        localStorage.getItem('hayleys_loyalty_state_v5_customer') ||
+        localStorage.getItem('hayleys_loyalty_state_v4_customer') ||
+        localStorage.getItem('hayleys_loyalty_state_v3_customer') ||
+        localStorage.getItem('hayleys_loyalty_state_v2_customer') ||
+        localStorage.getItem('hayleys_loyalty_state_v1_customer');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...INITIAL_CUSTOMER,
+          ...parsed,
+          tier: 'Silver' as const,
+        };
+      }
+      return INITIAL_CUSTOMER;
     } catch {
       return INITIAL_CUSTOMER;
     }
@@ -123,7 +154,18 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [vouchers, setVouchers] = useState<Voucher[]>(() => {
     try {
       const saved = localStorage.getItem(`${STORAGE_KEY}_vouchers`);
-      return saved ? JSON.parse(saved) : INITIAL_VOUCHERS;
+      if (saved) {
+        const parsed: Voucher[] = JSON.parse(saved);
+        // Ensure image is attached to vouchers
+        return parsed.map((v) => {
+          const matchingInit = INITIAL_VOUCHERS.find((iv) => iv.id === v.id || iv.code === v.code);
+          return {
+            ...v,
+            image: v.image || matchingInit?.image,
+          };
+        });
+      }
+      return INITIAL_VOUCHERS;
     } catch {
       return INITIAL_VOUCHERS;
     }
@@ -141,13 +183,23 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   });
 
-  const [supportTickets, setSupportTickets] = useState<SupportTicket[]>([]);
+  const [supportTickets, setSupportTickets] = useState<SupportTicket[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_support_tickets`);
+      return saved ? JSON.parse(saved) : INITIAL_SUPPORT_TICKETS;
+    } catch {
+      return INITIAL_SUPPORT_TICKETS;
+    }
+  });
+  const [supportModalTab, setSupportModalTab] = useState<'CREATE' | 'TRACK' | 'FAQ'>('CREATE');
   const [language, setLanguageState] = useState<Language>('EN');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<'home' | 'wallet' | 'activity' | 'offers' | 'rewards' | 'profile'>('home');
 
   // Modals
   const [isDigitalCardOpen, setIsDigitalCardOpen] = useState(false);
+  const [isVouchersModalOpen, setIsVouchersModalOpen] = useState(false);
+  const [selectedPromotion, setSelectedPromotion] = useState<Offer | null>(null);
   const [isRedemptionModalOpen, setIsRedemptionModalOpen] = useState(false);
   const [redemptionTargetBU, setRedemptionTargetBU] = useState<BusinessUnit | null>(null);
   const [isChangeMoneyModalOpen, setIsChangeMoneyModalOpen] = useState(false);
@@ -167,6 +219,35 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   });
 
+  // Clean up legacy localStorage keys and enforce Silver tier on mount
+  useEffect(() => {
+    try {
+      [
+        'hayleys_loyalty_state_v1_customer',
+        'hayleys_loyalty_state_v1_wallet',
+        'hayleys_loyalty_state_v1_transactions',
+        'hayleys_loyalty_state_v1_change_money',
+        'hayleys_loyalty_state_v1_vouchers',
+        'hayleys_loyalty_state_v1_missions',
+        'hayleys_loyalty_state_v1_badges',
+        'hayleys_loyalty_state_v1_support_tickets',
+        'hayleys_loyalty_state_v2_customer',
+        'hayleys_loyalty_state_v2_wallet',
+        'hayleys_loyalty_state_v2_transactions',
+        'hayleys_loyalty_state_v3_customer',
+        'hayleys_loyalty_state_v3_transactions',
+        'hayleys_loyalty_state_v4_customer',
+        'hayleys_customer',
+      ].forEach((key) => localStorage.removeItem(key));
+    } catch {
+      // ignore
+    }
+
+    if (customer.tier !== 'Silver') {
+      setCustomer((prev) => ({ ...prev, tier: 'Silver' }));
+    }
+  }, []);
+
   // Sync to local storage for persistence across turns
   useEffect(() => {
     try {
@@ -176,10 +257,16 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
       localStorage.setItem(`${STORAGE_KEY}_change_money`, JSON.stringify(changeMoneyLedger));
       localStorage.setItem(`${STORAGE_KEY}_vouchers`, JSON.stringify(vouchers));
       localStorage.setItem(`${STORAGE_KEY}_missions`, JSON.stringify(missions));
+      localStorage.setItem(`${STORAGE_KEY}_support_tickets`, JSON.stringify(supportTickets));
     } catch {
       // Local storage might be disabled in sandboxed environments
     }
-  }, [customer, wallet, transactions, changeMoneyLedger, vouchers, missions]);
+  }, [customer, wallet, transactions, changeMoneyLedger, vouchers, missions, supportTickets]);
+
+  const openSupportModal = (tab?: 'CREATE' | 'TRACK' | 'FAQ') => {
+    if (tab) setSupportModalTab(tab);
+    setIsSupportModalOpen(true);
+  };
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
@@ -277,7 +364,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     const newTxn: Transaction = {
       id: `TXN-${Date.now().toString().slice(-4)}`,
-      description: desc,
+      description: desc.includes('Silver') ? desc : `${desc} (Silver Member)`,
       businessUnit: bu,
       date: dateStr,
       time: timeStr,
@@ -328,9 +415,11 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
     category: SupportTicket['category'],
     subject: string,
     message: string,
-    transactionRef?: string
+    transactionRef?: string,
+    priority?: 'NORMAL' | 'URGENT',
+    attachmentName?: string
   ): string => {
-    const ticketId = `TKT-${Math.floor(10000 + Math.random() * 90000)}`;
+    const ticketId = `CAS-2026-${Math.floor(10000 + Math.random() * 90000)}`;
     const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     const newTicket: SupportTicket = {
       id: ticketId,
@@ -340,9 +429,29 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
       transactionRef,
       message,
       status: 'RECEIVED',
+      priority: priority || 'NORMAL',
+      attachmentName,
+      resolutionNotes: 'Case acknowledged by Hayleys Member Support. A ticket officer is assigned.',
+      updatedAt: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
     };
     setSupportTickets((prev) => [newTicket, ...prev]);
     return ticketId;
+  };
+
+  const updateTicketStatus = (ticketId: string, status: SupportTicket['status'], resolutionNotes?: string) => {
+    setSupportTickets((prev) =>
+      prev.map((t) => {
+        if (t.id === ticketId) {
+          return {
+            ...t,
+            status,
+            resolutionNotes: resolutionNotes || t.resolutionNotes,
+            updatedAt: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+          };
+        }
+        return t;
+      })
+    );
   };
 
   const spinLuckyWheel = (points: number, label: string) => {
@@ -373,6 +482,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
       localStorage.removeItem(`${STORAGE_KEY}_change_money`);
       localStorage.removeItem(`${STORAGE_KEY}_vouchers`);
       localStorage.removeItem(`${STORAGE_KEY}_missions`);
+      localStorage.removeItem(`${STORAGE_KEY}_support_tickets`);
     } catch {
       // ignore
     }
@@ -384,7 +494,8 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
     setMissions(INITIAL_MISSIONS);
     setBadges(INITIAL_BADGES);
     setDailySpinClaimed(false);
-    setSupportTickets([]);
+    setSupportTickets(INITIAL_SUPPORT_TICKETS);
+    setSupportModalTab('CREATE');
     setRedemptionTargetBU(null);
     setIsRedemptionModalOpen(false);
     setIsDigitalCardOpen(false);
@@ -417,6 +528,10 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
         setActiveTab,
         isDigitalCardOpen,
         setIsDigitalCardOpen,
+        isVouchersModalOpen,
+        setIsVouchersModalOpen,
+        selectedPromotion,
+        setSelectedPromotion,
         isRedemptionModalOpen,
         setIsRedemptionModalOpen,
         redemptionTargetBU,
@@ -427,6 +542,9 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
         setIsStoreLocatorOpen,
         isSupportModalOpen,
         setIsSupportModalOpen,
+        supportModalTab,
+        setSupportModalTab,
+        openSupportModal,
         isFamilyModalOpen,
         setIsFamilyModalOpen,
         isScanQROpen,
@@ -442,6 +560,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
         simulateEarn,
         markVoucherUsed,
         submitSupportTicket,
+        updateTicketStatus,
         resetDemoData,
         startCrossBusinessRedemption,
       }}

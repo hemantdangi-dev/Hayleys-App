@@ -92,7 +92,7 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       greeting: 'Hello Nimal',
-      membershipTier: 'Emerald Member',
+      membershipTier: 'Silver Member',
       availablePoints: 'Available Points',
       pendingPoints: 'Pending Points',
       expiringPoints: 'Expiring Soon',
@@ -105,7 +105,7 @@ export const translations: Record<Language, Translations> = {
       businessUnitsSubtitle: 'One shared wallet across all four sectors',
       personalizedOffers: 'Offers For You',
       activeMission: 'Active Milestone',
-      tapToScan: 'Tap card to show QR & Barcode',
+      tapToScan: 'Tap card to show QR code',
     },
     bu: {
       RETAIL: 'Retail',
@@ -169,7 +169,7 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       greeting: 'හෙලෝ නිමල්',
-      membershipTier: 'එමරල්ඩ් සාමාජික',
+      membershipTier: 'රිදී සාමාජික (Silver)',
       availablePoints: 'ලබාගත හැකි ලකුණු',
       pendingPoints: 'පොරොත්තු ලකුණු',
       expiringPoints: 'කල් ඉකුත්වන ලකුණු',
@@ -182,7 +182,7 @@ export const translations: Record<Language, Translations> = {
       businessUnitsSubtitle: 'අංශ 4 පුරාම එකම පසුම්බියකින් ප්‍රතිලාභ',
       personalizedOffers: 'ඔබ වෙනුවෙන්ම විශේෂ දීමනා',
       activeMission: 'සක්‍රීය ඉලක්කය',
-      tapToScan: 'QR සහ තීරු කේතය බැලීමට ස්පර්ශ කරන්න',
+      tapToScan: 'QR කේතය බැලීමට ස්පර්ශ කරන්න',
     },
     bu: {
       RETAIL: 'සිල්ලර වෙළඳාම',
@@ -246,7 +246,7 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       greeting: 'ஹலோ நிமால்',
-      membershipTier: 'எமரால்டு உறுப்பினர்',
+      membershipTier: 'வெள்ளி உறுப்பினர் (Silver)',
       availablePoints: 'கிடைக்கக்கூடிய புள்ளிகள்',
       pendingPoints: 'நிலுவையில் உள்ள புள்ளிகள்',
       expiringPoints: 'விரைவில் காலாவதியாகும்',
@@ -259,7 +259,7 @@ export const translations: Record<Language, Translations> = {
       businessUnitsSubtitle: 'நான்கு துறைகளுக்கும் ஒரே பகிர்வு பணப்பை',
       personalizedOffers: 'உங்களுக்கான சலுகைகள்',
       activeMission: 'நடப்பு மைல்கல்',
-      tapToScan: 'QR மற்றும் பார்கோடைப் பார்க்க தொடவும்',
+      tapToScan: 'QR குறியீட்டைக் பார்க்க தொடவும்',
     },
     bu: {
       RETAIL: 'சில்லறை விற்பனை',
