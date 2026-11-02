@@ -17,7 +17,6 @@ import { RewardsScreen } from './components/screens/RewardsScreen';
 import { ProfileScreen } from './components/screens/ProfileScreen';
 
 // Modals
-import { DigitalCardModal } from './components/modals/DigitalCardModal';
 import { RedemptionModal } from './components/modals/RedemptionModal';
 import { ChangeMoneyModal } from './components/modals/ChangeMoneyModal';
 import { StoreLocatorModal } from './components/modals/StoreLocatorModal';
@@ -31,10 +30,6 @@ import { PromotionDetailModal } from './components/modals/PromotionDetailModal';
 const AppContent: React.FC = () => {
   const { isLoggedIn, activeTab } = useLoyalty();
   const [isPhoneFrame, setIsPhoneFrame] = useState(true);
-
-  if (!isLoggedIn) {
-    return <LoginScreen />;
-  }
 
   const renderActiveScreen = () => {
     switch (activeTab) {
@@ -69,21 +64,28 @@ const AppContent: React.FC = () => {
               : 'max-w-2xl min-h-[90vh] rounded-none md:rounded-3xl shadow-xl overflow-hidden'
           }`}
         >
-          {/* Top Sticky App Header */}
-          <Header />
+          {!isLoggedIn ? (
+            <div className="h-full overflow-y-auto">
+              <LoginScreen />
+            </div>
+          ) : (
+            <>
+              {/* Top Sticky App Header */}
+              <Header />
 
-          {/* Dynamic Scrollable Screen Body */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
-            {renderActiveScreen()}
-          </div>
+              {/* Dynamic Scrollable Screen Body */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                {renderActiveScreen()}
+              </div>
 
-          {/* Persistent Bottom Tab Navigation */}
-          <BottomNav />
+              {/* Persistent Bottom Tab Navigation */}
+              <BottomNav />
+            </>
+          )}
         </main>
       </div>
 
       {/* Global Interactive Modals */}
-      <DigitalCardModal />
       <RedemptionModal />
       <ChangeMoneyModal />
       <StoreLocatorModal />

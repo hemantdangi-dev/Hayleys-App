@@ -16,7 +16,7 @@ import {
 export const INITIAL_CUSTOMER: CustomerProfile = {
   name: 'Nimal Perera',
   membershipId: 'HLY-20487619',
-  tier: 'Silver',
+  tier: 'Gold',
   joinedYear: 2021,
   phone: '+94 77 234 4821',
   email: 'nimal.perera@example.lk',
@@ -25,15 +25,15 @@ export const INITIAL_CUSTOMER: CustomerProfile = {
 };
 
 export const INITIAL_WALLET: WalletState = {
-  availablePoints: 2450,
+  availablePoints: 1551,
   pendingPoints: 120,
   expiringPoints: 200,
   expiringDate: '30 Nov 2026',
   changeMoneyLKR: 125.50,
   earnedByBU: {
-    RETAIL: 1600,
-    LEISURE: 500,
-    TRAVELS: 250,
+    RETAIL: 900,
+    LEISURE: 400,
+    TRAVELS: 151,
     MOBILITY: 100,
   },
 };
@@ -66,7 +66,7 @@ export const INITIAL_CHANGE_MONEY_LEDGER: ChangeMoneyTransaction[] = [
 export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'TXN-9021',
-    description: 'Supermarket weekly grocery & fresh produce (Silver 10% bonus points)',
+    description: 'Supermarket weekly grocery & fresh produce (Gold 15% bonus points)',
     businessUnit: 'RETAIL',
     date: '25 Oct 2026',
     time: '17:35',
@@ -79,7 +79,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-8842',
-    description: 'The Kingsbury Hotel Colombo - Weekend dining (Silver 1.1x earn rate)',
+    description: 'The Kingsbury Hotel Colombo - Weekend dining (Gold 1.25x earn rate)',
     businessUnit: 'LEISURE',
     date: '21 Oct 2026',
     time: '14:20',
@@ -92,7 +92,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-8510',
-    description: 'Hayleys Travels & Tours - Bespoke holiday deposit (Silver Member Privilege)',
+    description: 'Hayleys Travels & Tours - Bespoke holiday deposit (Gold Member Privilege)',
     businessUnit: 'TRAVELS',
     date: '15 Oct 2026',
     time: '11:05',
@@ -105,7 +105,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-8120',
-    description: 'Hayleys Advantis Fleet - Airport transfer (Silver Member rate)',
+    description: 'Hayleys Advantis Fleet - Airport transfer (Gold Member rate)',
     businessUnit: 'MOBILITY',
     date: '08 Oct 2026',
     time: '08:50',
@@ -118,7 +118,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-7940',
-    description: 'Hayleys Supermarket Kandy - Specialty groceries & tea (Silver points accrual)',
+    description: 'Hayleys Supermarket Kandy - Specialty groceries & tea (Gold points accrual)',
     businessUnit: 'RETAIL',
     date: '29 Sep 2026',
     time: '19:10',
@@ -131,7 +131,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 'TXN-7512',
-    description: 'Hayleys Retail Supermarket - Pantry restocking (Silver Tier qualification)',
+    description: 'Hayleys Retail Supermarket - Pantry restocking (Gold Tier qualification)',
     businessUnit: 'RETAIL',
     date: '12 Sep 2026',
     time: '16:04',
@@ -387,13 +387,13 @@ export const ALL_OFFERS: Offer[] = [
     category: 'Promotional',
     validUntil: '31 Dec 2026',
     image: '/src/assets/images/promo_buy2_get100_1793353331701.jpg',
-    description: 'Buy any 2 qualifying items across Hayleys Retail Supermarkets and instantly receive 100 bonus loyalty points credited to your Silver card account.',
+    description: 'Buy any 2 qualifying items across Hayleys Retail Supermarkets and instantly receive 100 bonus loyalty points credited to your Gold card account.',
     isForYou: true,
     isMemberOnly: true,
     terms: [
       'Purchase any 2 eligible packaged goods or grocery items at any Hayleys Retail store',
       '100 bonus loyalty points credited automatically upon checkout scanning',
-      'Valid for Silver, Gold, and Platinum tier members',
+      'Valid for Gold, Platinum, and Emerald tier members',
       'Bonus points qualify for cross-redemption across Leisure, Travels, and Mobility',
     ],
     code: 'BUY2-GET100',
@@ -420,11 +420,11 @@ export const ALL_OFFERS: Offer[] = [
     category: 'Privilege',
     validUntil: '15 Nov 2026',
     image: '/src/assets/images/hayleys_leisure_resort_1792998393316.jpg',
-    description: 'Exclusive 15% savings on total food bill at Ocean Seafood Restaurant and The Grill for Hayleys Silver members.',
+    description: 'Exclusive 20% savings on total food bill at Ocean Seafood Restaurant and The Grill for Hayleys Gold members.',
     isForYou: true,
     isMemberOnly: true,
     terms: ['Present membership card on arrival', 'Excludes alcoholic beverages and public holidays'],
-    code: 'KB-SILVER15',
+    code: 'KB-GOLD20',
   },
   {
     id: 'OFF-03',

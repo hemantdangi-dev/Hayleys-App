@@ -5,13 +5,8 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
-  TrendingUp,
-  Clock,
-  Building2,
-  Palmtree,
-  Compass,
-  Car,
   Flame,
+  Check,
 } from 'lucide-react';
 import { useLoyalty } from '../../context/LoyaltyContext';
 import { BusinessUnit } from '../../types';
@@ -50,35 +45,37 @@ export const RewardsScreen: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 px-4 py-3 pb-8">
+    <div className="space-y-4 px-4 py-3.5 pb-10">
       {/* Header */}
-      <div>
-        <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">
-          {t.nav.rewards} & Milestones
-        </h1>
-        <p className="text-xs text-slate-500 font-medium">
-          Redeem rewards across four sectors or complete missions for bonus points
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">
+            {t.nav.rewards} & Milestones
+          </h1>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">
+            Redeem rewards across four sectors or complete group missions
+          </p>
+        </div>
       </div>
 
       {/* Main Switcher: Rewards vs Missions */}
       <div className="grid grid-cols-2 p-1 bg-slate-200/80 rounded-2xl text-xs font-bold text-center">
         <button
           onClick={() => setActiveTab('CATALOG')}
-          className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === 'CATALOG'
-              ? 'bg-white text-emerald-800 shadow-sm'
+              ? 'bg-white text-emerald-900 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Gift className="w-4 h-4" />
+          <Gift className="w-4 h-4 text-emerald-800" />
           <span>Reward Catalogue</span>
         </button>
         <button
           onClick={() => setActiveTab('MISSIONS')}
-          className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === 'MISSIONS'
-              ? 'bg-white text-emerald-800 shadow-sm'
+              ? 'bg-white text-emerald-900 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -91,22 +88,26 @@ export const RewardsScreen: React.FC = () => {
       {activeTab === 'CATALOG' && (
         <div className="space-y-3.5">
           {/* BU Filter Strip */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-            {(['ALL', 'LEISURE', 'RETAIL', 'TRAVELS', 'MOBILITY'] as const).map((bu) => (
-              <button
-                key={bu}
-                onClick={() => setSelectedBU(bu)}
-                className={`px-3 py-1.5 rounded-xl font-semibold text-xs whitespace-nowrap transition-colors ${
-                  selectedBU === bu
-                    ? 'bg-emerald-700 text-white shadow-xs'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                {bu === 'ALL' ? 'All Rewards' : bu}
-              </button>
-            ))}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+            {(['ALL', 'LEISURE', 'RETAIL', 'TRAVELS', 'MOBILITY'] as const).map((bu) => {
+              const isSelected = selectedBU === bu;
+              return (
+                <button
+                  key={bu}
+                  onClick={() => setSelectedBU(bu)}
+                  className={`px-3 py-1.5 rounded-xl font-bold text-xs whitespace-nowrap transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-emerald-800 text-white shadow-xs'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  {bu === 'ALL' ? 'All Sectors' : bu}
+                </button>
+              );
+            })}
           </div>
 
+          {/* Reward List Cards */}
           <div className="space-y-3">
             {filteredRewards.map((reward) => {
               const canAfford = wallet.availablePoints >= reward.pointsRequired;
@@ -114,30 +115,30 @@ export const RewardsScreen: React.FC = () => {
                 <div
                   key={reward.id}
                   onClick={() => startCrossBusinessRedemption(reward.businessUnit)}
-                  className="p-3.5 rounded-3xl border border-slate-200 bg-white hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer flex gap-3.5 items-center"
+                  className="p-3.5 rounded-2xl border border-slate-200/90 bg-white hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer flex gap-3.5 items-center group active:scale-99"
                 >
                   <img
                     src={reward.image}
                     alt={reward.name}
                     referrerPolicy="no-referrer"
-                    className="w-20 h-20 rounded-2xl object-cover shrink-0 bg-slate-100 border border-slate-100"
+                    className="w-20 h-20 rounded-xl object-cover shrink-0 bg-slate-100 border border-slate-100"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium">
-                      <span className="uppercase font-bold text-emerald-800">{reward.businessUnit}</span>
+                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-semibold">
+                      <span className="uppercase text-emerald-800 font-extrabold">{reward.businessUnit}</span>
                       <span>·</span>
                       <span>{reward.category}</span>
                     </div>
-                    <h3 className="font-bold text-xs text-slate-900 line-clamp-1 mt-0.5">
+                    <h3 className="font-bold text-xs text-slate-900 line-clamp-1 mt-0.5 group-hover:text-emerald-800 transition-colors">
                       {reward.name}
                     </h3>
                     <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
                       {reward.description}
                     </p>
 
-                    <div className="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+                    <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-100">
                       <div>
-                        <span className="font-extrabold text-xs text-emerald-700 tabular-nums">
+                        <span className="font-extrabold text-xs text-emerald-800 tabular-nums">
                           {reward.pointsRequired.toLocaleString()} pts
                         </span>
                         <span className="text-[10px] text-slate-400 ml-1.5">
@@ -145,8 +146,10 @@ export const RewardsScreen: React.FC = () => {
                         </span>
                       </div>
                       <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          canAfford ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                        className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-0.5 ${
+                          canAfford
+                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                            : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         {canAfford ? 'Redeem →' : 'Need pts'}
@@ -163,17 +166,17 @@ export const RewardsScreen: React.FC = () => {
       {/* VIEW 2: MISSIONS & MILESTONES */}
       {activeTab === 'MISSIONS' && (
         <div className="space-y-3.5">
-          <div className="p-3 bg-emerald-50/70 border border-emerald-100 rounded-2xl text-xs text-emerald-950 flex items-start gap-2">
+          <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl text-xs text-emerald-950 flex items-start gap-2.5">
             <Sparkles className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
             <p className="text-[11px] leading-relaxed">
-              Complete cross-business challenges to unlock bonus points credited directly to your shared group wallet!
+              Complete cross-business challenges to unlock bonus points credited directly to your unified group wallet!
             </p>
           </div>
 
           {/* Gamification Hub Quick-Access Card */}
           <div
             onClick={() => setIsGamificationOpen(true)}
-            className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/15 border border-amber-300/80 shadow-xs cursor-pointer hover:border-amber-400 transition-all flex items-center justify-between"
+            className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/15 border border-amber-300/80 shadow-2xs cursor-pointer hover:border-amber-400 transition-all flex items-center justify-between group active:scale-99"
           >
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-amber-400 text-amber-950 flex items-center justify-center font-bold shrink-0 shadow-xs">
@@ -200,7 +203,7 @@ export const RewardsScreen: React.FC = () => {
             </div>
             <div className="flex items-center gap-1 text-emerald-800 font-bold text-xs shrink-0">
               <span>Open</span>
-              <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
+              <ArrowRight className="w-3.5 h-3.5 text-emerald-700 group-hover:translate-x-0.5 transition-transform" />
             </div>
           </div>
 
@@ -212,10 +215,10 @@ export const RewardsScreen: React.FC = () => {
               return (
                 <div
                   key={mission.id}
-                  className={`p-4 rounded-3xl border transition-all ${
+                  className={`p-4 rounded-2xl border transition-all ${
                     isDone
-                      ? 'bg-emerald-50/50 border-emerald-200'
-                      : 'bg-white border-slate-200 shadow-xs'
+                      ? 'bg-emerald-50/40 border-emerald-200'
+                      : 'bg-white border-slate-200/90 shadow-2xs'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -249,10 +252,10 @@ export const RewardsScreen: React.FC = () => {
 
                   {/* Progress Bar */}
                   <div className="mt-3 space-y-1">
-                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200/50">
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200/50">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
-                          isDone ? 'bg-emerald-600' : 'bg-emerald-500'
+                          isDone ? 'bg-emerald-600' : 'bg-emerald-700'
                         }`}
                         style={{ width: `${percent}%` }}
                       />
@@ -270,7 +273,7 @@ export const RewardsScreen: React.FC = () => {
                     <div className="mt-3 pt-2 border-t border-slate-100 flex justify-end">
                       <button
                         onClick={() => handleSimulateMissionAction(mission.id)}
-                        className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-[11px] transition-colors flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-xl text-[11px] transition-colors flex items-center gap-1 cursor-pointer"
                       >
                         <span>Simulate Next Step</span>
                         <ArrowRight className="w-3 h-3" />
@@ -286,3 +289,4 @@ export const RewardsScreen: React.FC = () => {
     </div>
   );
 };
+

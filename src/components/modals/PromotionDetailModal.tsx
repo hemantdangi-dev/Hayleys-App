@@ -51,7 +51,7 @@ export const PromotionDetailModal: React.FC = () => {
   const handleActivate = () => {
     setIsActivated(true);
     setActivationMessage(
-      `Promotion "${selectedPromotion.title}" is now active on your Silver card! Bonus points will credit on checkout.`
+      `Promotion "${selectedPromotion.title}" is now active on your Gold card! Bonus points will credit on checkout.`
     );
     setTimeout(() => {
       setActivationMessage(null);
@@ -60,7 +60,7 @@ export const PromotionDetailModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fade-in">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-slate-200">
+      <div className="w-full max-w-[390px] bg-white rounded-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-slate-200">
         {/* Top Header & Close button */}
         <div className="relative">
           {/* Picture of the promotion */}
@@ -192,7 +192,7 @@ export const PromotionDetailModal: React.FC = () => {
                 </span>
                 <span className="text-[10px] font-bold text-slate-800 block">Scan Card</span>
                 <span className="text-[9px] text-slate-500 block leading-tight">
-                  Present your Silver card pass
+                  Present your Gold card pass
                 </span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">

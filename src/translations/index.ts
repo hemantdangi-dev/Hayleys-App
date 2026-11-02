@@ -92,7 +92,7 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       greeting: 'Hello Nimal',
-      membershipTier: 'Silver Member',
+      membershipTier: 'Gold Member',
       availablePoints: 'Available Points',
       pendingPoints: 'Pending Points',
       expiringPoints: 'Expiring Soon',
@@ -169,7 +169,7 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       greeting: 'හෙලෝ නිමල්',
-      membershipTier: 'රිදී සාමාජික (Silver)',
+      membershipTier: 'රන් සාමාජික (Gold)',
       availablePoints: 'ලබාගත හැකි ලකුණු',
       pendingPoints: 'පොරොත්තු ලකුණු',
       expiringPoints: 'කල් ඉකුත්වන ලකුණු',
@@ -246,7 +246,7 @@ export const translations: Record<Language, Translations> = {
     },
     home: {
       greeting: 'ஹலோ நிமால்',
-      membershipTier: 'வெள்ளி உறுப்பினர் (Silver)',
+      membershipTier: 'தங்க உறுப்பினர் (Gold)',
       availablePoints: 'கிடைக்கக்கூடிய புள்ளிகள்',
       pendingPoints: 'நிலுவையில் உள்ள புள்ளிகள்',
       expiringPoints: 'விரைவில் காலாவதியாகும்',

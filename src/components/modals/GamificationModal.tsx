@@ -99,15 +99,15 @@ export const GamificationModal: React.FC = () => {
     }
   };
 
-  // Tier progression math: Silver -> Gold (3,000 pts target)
-  const nextTierTarget = 3000;
+  // Tier progression math: Gold -> Platinum (5,000 pts target)
+  const nextTierTarget = 5000;
   const currentPoints = wallet.availablePoints;
   const tierProgressPercent = Math.min(100, Math.round((currentPoints / nextTierTarget) * 100));
   const pointsRemaining = Math.max(0, nextTierTarget - currentPoints);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
-      <div className="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-slide-up">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fade-in">
+      <div className="w-full max-w-[390px] bg-white rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 animate-slide-up">
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white">
           <div className="flex items-center gap-2">
@@ -383,25 +383,25 @@ export const GamificationModal: React.FC = () => {
                     </span>
                     <h3 className="text-lg font-extrabold text-white">{customer.tier} Member</h3>
                   </div>
-                  <span className="text-xs bg-slate-700 text-slate-200 px-2 py-1 rounded-md font-bold border border-slate-600">
-                    Silver · Active
+                  <span className="text-xs bg-amber-400 text-amber-950 px-2.5 py-1 rounded-md font-extrabold border border-amber-300">
+                    Gold · Active
                   </span>
                 </div>
 
-                {/* Progress bar to Gold Tier */}
+                {/* Progress bar to Platinum Tier */}
                 <div className="space-y-1.5 pt-1">
                   <div className="flex justify-between text-xs text-slate-300">
-                    <span>Next: <strong>Gold Tier</strong></span>
+                    <span>Next: <strong>Platinum Tier</strong></span>
                     <span className="font-mono font-bold">{currentPoints} / {nextTierTarget} pts</span>
                   </div>
                   <div className="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-700/60">
                     <div
-                      className="bg-gradient-to-r from-slate-400 via-emerald-400 to-amber-300 h-full rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-amber-400 via-emerald-400 to-amber-300 h-full rounded-full transition-all duration-500"
                       style={{ width: `${tierProgressPercent}%` }}
                     />
                   </div>
                   <div className="flex justify-between text-[11px] text-slate-400">
-                    <span>{pointsRemaining} pts needed to upgrade to Gold</span>
+                    <span>{pointsRemaining} pts needed to upgrade to Platinum</span>
                     <span>{tierProgressPercent}% unlocked</span>
                   </div>
                 </div>

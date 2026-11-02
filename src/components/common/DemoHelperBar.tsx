@@ -29,7 +29,6 @@ export const DemoHelperBar: React.FC<DemoHelperBarProps> = ({
     simulateEarn,
     startCrossBusinessRedemption,
     setActiveTab,
-    setIsDigitalCardOpen,
     setIsScanQROpen,
     setIsGamificationOpen,
     openSupportModal,
@@ -58,12 +57,8 @@ export const DemoHelperBar: React.FC<DemoHelperBarProps> = ({
   const handleStepJump = (step: number) => {
     switch (step) {
       case 1:
-        setActiveTab('home');
-        setIsDigitalCardOpen(true);
-        break;
       case 2:
         setActiveTab('home');
-        setIsDigitalCardOpen(false);
         break;
       case 3:
         setActiveTab('activity');

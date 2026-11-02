@@ -12,6 +12,7 @@ import {
   ChevronRight,
   ShieldCheck,
   Check,
+  Sparkles,
 } from 'lucide-react';
 import { useLoyalty } from '../../context/LoyaltyContext';
 import { Language } from '../../types';
@@ -20,6 +21,7 @@ import { translations } from '../../translations';
 export const ProfileScreen: React.FC = () => {
   const {
     customer,
+    wallet,
     language,
     setLanguage,
     setIsFamilyModalOpen,
@@ -53,101 +55,108 @@ export const ProfileScreen: React.FC = () => {
     <div className="space-y-4 px-4 py-3 pb-8">
       {/* Header */}
       <div>
-        <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">
-          {t.nav.profile} & Preferences
+        <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+          {t.nav.profile} & Account
         </h1>
-        <p className="text-xs text-slate-500 font-medium">
-          Manage your Hayleys Group loyalty account, language, and household
+        <p className="text-[11px] text-slate-500 font-medium">
+          Hayleys Group loyalty membership, household & settings
         </p>
       </div>
 
       {/* Member Profile Card */}
-      <div className="p-4 bg-white rounded-3xl border border-slate-200 shadow-xs flex items-center gap-3.5">
-        <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white flex items-center justify-center font-extrabold text-lg shrink-0 border border-slate-600 shadow-xs">
-          NP
+      <div className="p-4 bg-white rounded-3xl border border-slate-200/90 shadow-2xs space-y-3">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-base shrink-0 shadow-xs">
+            NP
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h2 className="font-extrabold text-sm text-slate-900 truncate">
+                {customer.name}
+              </h2>
+              <span className="text-[10px] font-extrabold text-amber-950 bg-amber-300/90 px-2 py-0.5 rounded-full border border-amber-400">
+                {customer.tier} Tier
+              </span>
+            </div>
+            <div className="text-xs text-slate-500 font-mono mt-0.5">
+              {customer.membershipId}
+            </div>
+            <div className="text-[11px] text-slate-400">
+              +94 77 ••• •821 · Member since {customer.joinedYear}
+            </div>
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h2 className="font-extrabold text-sm text-slate-900 truncate">
-              {customer.name}
-            </h2>
-            <span className="text-[10px] font-extrabold text-slate-700 bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300 shadow-2xs">
-              Silver Tier
+
+        {/* Tier Progress bar toward Platinum */}
+        <div className="pt-2.5 border-t border-slate-100 space-y-1.5">
+          <div className="flex justify-between text-xs text-slate-600">
+            <span className="font-medium text-[11px]">Platinum Tier Progression</span>
+            <span className="font-bold text-slate-900 text-[11px]">
+              {wallet.availablePoints.toLocaleString()} / 5,000 pts
             </span>
           </div>
-          <div className="text-xs text-slate-500 font-mono mt-0.5">
-            {customer.membershipId}
+          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+            <div
+              className="bg-amber-500 h-full rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(100, Math.round((wallet.availablePoints / 5000) * 100))}%` }}
+            />
           </div>
-          <div className="text-[11px] text-slate-400 mt-0.5">
-            +94 77 ••• •821 · Member since {customer.joinedYear}
+          <div className="flex justify-between items-center text-[10px] text-slate-400 pt-0.5">
+            <span>
+              {Math.max(0, 5000 - wallet.availablePoints).toLocaleString()} points required to unlock Platinum VIP status
+            </span>
+            <button
+              onClick={() => setIsGamificationOpen(true)}
+              className="text-emerald-800 font-bold hover:underline"
+            >
+              Roadmap →
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Silver Tier Privileges Banner */}
-      <div className="p-3.5 bg-gradient-to-r from-slate-50 via-slate-100 to-slate-50 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between gap-3 text-xs">
-        <div className="space-y-0.5 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="font-extrabold text-slate-900 text-xs">Silver Member Privileges</span>
-            <span className="text-[9px] font-bold text-slate-600 bg-white px-1.5 py-0.2 rounded-sm border border-slate-300">Active</span>
-          </div>
-          <p className="text-[11px] text-slate-500 truncate">
-            10% bonus points on Retail · 1.1x Leisure dining · 550 pts to Gold
-          </p>
-        </div>
-        <button
-          onClick={() => setIsGamificationOpen(true)}
-          className="shrink-0 px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-lg text-[11px] font-bold transition-colors cursor-pointer"
-        >
-          Tier Roadmap →
-        </button>
-      </div>
-
-      {/* Language Switcher Section */}
-      <div className="p-4 bg-white rounded-3xl border border-slate-200 shadow-xs space-y-2.5">
+      {/* Language Selection Segmented Control */}
+      <div className="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2">
         <div className="flex items-center gap-2 text-slate-900">
-          <Globe className="w-4 h-4 text-emerald-700" />
-          <h3 className="font-bold text-xs">App Language (භාෂාව / மொழி)</h3>
+          <Globe className="w-4 h-4 text-emerald-800" />
+          <h3 className="font-bold text-xs">Application Language (භාෂාව / மொழி)</h3>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 p-1 bg-slate-100 rounded-xl text-xs font-semibold text-center">
           {languages.map((l) => {
             const isSelected = language === l.code;
             return (
               <button
                 key={l.code}
                 onClick={() => setLanguage(l.code)}
-                className={`py-2 px-1 rounded-xl text-xs flex flex-col items-center justify-center transition-all ${
+                className={`py-1.5 rounded-lg transition-all ${
                   isSelected
-                    ? 'bg-emerald-700 text-white font-bold shadow-xs'
-                    : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'
+                    ? 'bg-white text-emerald-900 font-bold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <span className="text-xs">{l.nativeName}</span>
-                <span className={`text-[10px] ${isSelected ? 'text-emerald-200' : 'text-slate-400'}`}>
-                  {l.name}
-                </span>
+                <span>{l.nativeName}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Group Services & Support Menu */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden text-xs">
-        {/* Family & Household Account */}
+      {/* Group Services Menu */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs divide-y divide-slate-100 overflow-hidden text-xs">
+        {/* Family Pooling */}
         <button
           onClick={() => setIsFamilyModalOpen(true)}
           className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
             <div>
               <span className="font-bold text-slate-900 block">Family & Household Pooling</span>
               <span className="text-[11px] text-slate-500">
-                Governed point-sharing rules ({customer.familyMembersCount} active members)
+                Shared family wallet ({customer.familyMembersCount} active members)
               </span>
             </div>
           </div>
@@ -160,37 +169,37 @@ export const ProfileScreen: React.FC = () => {
           className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-800 flex items-center justify-center">
               <MapPin className="w-4 h-4" />
             </div>
             <div>
               <span className="font-bold text-slate-900 block">Outlets & Service Desks</span>
               <span className="text-[11px] text-slate-500">
-                Retail supermarkets, Kingsbury/Amaya, Travels, and Mobility hubs
+                Supermarkets, Kingsbury, Amaya Resorts, and Mobility hubs
               </span>
             </div>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400" />
         </button>
 
-        {/* Support Cases & Help Desk */}
+        {/* Support Desk */}
         <button
           onClick={() => openSupportModal('TRACK')}
           className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
-              <HelpCircle className="w-4 h-4 text-emerald-700" />
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center">
+              <HelpCircle className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-slate-900 block">Support Cases & Concierge Desk</span>
+                <span className="font-bold text-slate-900 block">Member Support & Cases</span>
                 <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                   {supportTickets.length} Cases
                 </span>
               </div>
               <span className="text-[11px] text-slate-500">
-                Log new claims, missing points, and track ticket resolutions
+                Missing points claims, inquiries & resolution tracking
               </span>
             </div>
           </div>
@@ -198,16 +207,16 @@ export const ProfileScreen: React.FC = () => {
         </button>
       </div>
 
-      {/* Notification Preferences */}
-      <div className="p-4 bg-white rounded-3xl border border-slate-200 shadow-xs space-y-3 text-xs">
+      {/* Notifications Toggle */}
+      <div className="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2.5 text-xs">
         <div className="flex items-center gap-2 text-slate-900">
-          <Bell className="w-4 h-4 text-emerald-700" />
-          <h3 className="font-bold text-xs">Notifications & Privacy</h3>
+          <Bell className="w-4 h-4 text-emerald-800" />
+          <h3 className="font-bold text-xs">Alerts & Communications</h3>
         </div>
 
-        <div className="space-y-2 text-slate-700">
+        <div className="space-y-1.5 text-slate-700">
           <label className="flex items-center justify-between cursor-pointer py-1">
-            <span>Points Earning & Expiry SMS Alerts</span>
+            <span className="text-[11px]">Points earning & expiry SMS alerts</span>
             <input
               type="checkbox"
               checked={smsAlerts}
@@ -216,7 +225,7 @@ export const ProfileScreen: React.FC = () => {
             />
           </label>
           <label className="flex items-center justify-between cursor-pointer py-1 border-t border-slate-100">
-            <span>Exclusive Group Offers & Privileges</span>
+            <span className="text-[11px]">Exclusive Hayleys group partner privileges</span>
             <input
               type="checkbox"
               checked={emailAlerts}
@@ -227,30 +236,30 @@ export const ProfileScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Reset Demo State Section */}
-      <div className="p-4 bg-slate-50 rounded-3xl border border-slate-200 text-center space-y-2">
-        <span className="text-[11px] text-slate-500 block">
-          Client Evaluation Prototype Controls
+      {/* Prototype Demo Controls */}
+      <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-2">
+        <span className="text-[10px] text-slate-400 font-medium block">
+          Evaluation Prototype Actions
         </span>
 
         {resetConfirmToast && (
           <div className="p-2 bg-emerald-100 text-emerald-800 text-xs rounded-xl font-medium animate-fade-in flex items-center justify-center gap-1.5">
             <Check className="w-4 h-4" />
-            <span>Demo state restored to initial RFP baseline!</span>
+            <span>Prototype state reset to initial baseline!</span>
           </div>
         )}
 
         <div className="flex gap-2">
           <button
             onClick={handleReset}
-            className="flex-1 py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            className="flex-1 py-2 px-3 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Reset Demo Data</span>
+            <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+            <span>Reset Demo</span>
           </button>
           <button
             onClick={() => setIsLoggedIn(false)}
-            className="py-2.5 px-3 bg-white hover:bg-rose-50 border border-slate-300 hover:border-rose-300 text-slate-600 hover:text-rose-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            className="py-2 px-3 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-300 text-slate-600 hover:text-rose-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>

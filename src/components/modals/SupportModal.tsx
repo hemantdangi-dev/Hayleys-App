@@ -14,7 +14,6 @@ import {
   Paperclip,
   Check,
   RefreshCw,
-  Search,
   Filter,
   Tag,
   Coins,
@@ -22,6 +21,9 @@ import {
   CreditCard,
   Building2,
   Sparkles,
+  Phone,
+  Mail,
+  MapPin,
 } from 'lucide-react';
 import { useLoyalty } from '../../context/LoyaltyContext';
 import { SupportTicket } from '../../types';
@@ -83,8 +85,8 @@ export const SupportModal: React.FC = () => {
     },
     {
       id: 'CARD_ISSUE',
-      label: `${customer.tier} Tier & Pass`,
-      desc: 'Card QR & tier privileges',
+      label: `${customer.tier} Tier Privileges`,
+      desc: 'Tier status & benefit inquiry',
       icon: CreditCard,
       color: 'text-purple-700 bg-purple-50 border-purple-200',
     },
@@ -95,13 +97,6 @@ export const SupportModal: React.FC = () => {
       icon: Building2,
       color: 'text-slate-700 bg-slate-50 border-slate-200',
     },
-  ];
-
-  const quickSubjects = [
-    { text: 'Points missing from Retail Supermarket grocery bill', cat: 'MISSING_POINTS' as const },
-    { text: 'Change Money cash round-up not credited at checkout', cat: 'CHANGE_MONEY' as const },
-    { text: 'Kingsbury restaurant voucher verification inquiry', cat: 'REDEMPTION' as const },
-    { text: `${customer.tier} tier upgrade progress clarification`, cat: 'CARD_ISSUE' as const },
   ];
 
   const faqs = [
@@ -122,8 +117,8 @@ export const SupportModal: React.FC = () => {
       a: 'Under the defined RFP Scenario 1 architecture, Singer RED operates on a separate commercial structure and remains strictly outside the shared Hayleys Group loyalty wallet.',
     },
     {
-      q: 'What privileges do I receive as a Silver Tier member?',
-      a: 'Silver members receive 1x base points on all purchases, 15% dining savings at The Kingsbury and Amaya Resorts, access to digital pass scanning, and governed household pooling.',
+      q: 'What privileges do I receive as a Gold Tier member?',
+      a: 'Gold members receive 1.25x bonus points on all purchases, 20% dining savings at The Kingsbury and Amaya Resorts, priority concierge, access to digital pass scanning, and governed household pooling.',
     },
   ];
 
@@ -187,8 +182,8 @@ export const SupportModal: React.FC = () => {
   const activeTicketsCount = supportTickets.filter((t) => t.status !== 'RESOLVED').length;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
-      <div className="w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-slide-up">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fade-in">
+      <div className="w-full max-w-[390px] bg-white rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 animate-slide-up">
         {/* Modal Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
           <div className="flex items-center gap-2.5">
@@ -317,56 +312,35 @@ export const SupportModal: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <form onSubmit={handleCaseSubmit} className="space-y-4 text-xs">
-                  {/* Category Selection */}
-                  <div className="space-y-1.5">
-                    <label className="font-bold text-slate-800 block">
-                      Case Category *
+                <form onSubmit={handleCaseSubmit} className="space-y-3.5 text-xs">
+                  {/* Category Dropdown Selector (Clean & Minimal) */}
+                  <div>
+                    <label className="font-bold text-slate-800 block mb-1">
+                      Case Type / Category *
                     </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {categories.map((cat) => {
-                        const Icon = cat.icon;
-                        const isSelected = category === cat.id;
-                        return (
-                          <button
-                            type="button"
-                            key={cat.id}
-                            onClick={() => setCategory(cat.id)}
-                            className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                              isSelected
-                                ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <Icon className={`w-4 h-4 ${isSelected ? 'text-emerald-400' : 'text-slate-500'}`} />
-                              {isSelected && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                            </div>
-                            <div className="mt-2">
-                              <span className="font-bold block text-[11px] leading-tight truncate">
-                                {cat.label}
-                              </span>
-                              <span
-                                className={`text-[9px] block truncate ${
-                                  isSelected ? 'text-slate-300' : 'text-slate-400'
-                                }`}
-                              >
-                                {cat.desc}
-                              </span>
-                            </div>
-                          </button>
-                        );
-                      })}
+                    <div className="relative">
+                      <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value as SupportTicket['category'])}
+                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-emerald-700 text-xs font-semibold text-slate-900 cursor-pointer appearance-none pr-8"
+                      >
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.label} — {cat.desc}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
                     </div>
                   </div>
 
                   {/* Priority and Related Transaction Row */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2.5">
                     <div>
                       <label className="font-bold text-slate-700 block mb-1">
                         Priority Level
                       </label>
-                      <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl">
+                      <div className="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl">
                         <button
                           type="button"
                           onClick={() => setPriority('NORMAL')}
@@ -387,51 +361,31 @@ export const SupportModal: React.FC = () => {
                               : 'text-slate-500'
                           }`}
                         >
-                          Urgent / High
+                          Urgent
                         </button>
                       </div>
                     </div>
 
                     <div>
                       <label className="font-bold text-slate-700 block mb-1">
-                        Link Transaction (Optional)
+                        Link Transaction
                       </label>
                       <select
                         value={selectedTxnRef}
                         onChange={(e) => setSelectedTxnRef(e.target.value)}
                         className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-slate-800 text-xs font-medium"
                       >
-                        <option value="">-- No specific transaction --</option>
+                        <option value="">-- None (Optional) --</option>
                         {transactions.slice(0, 6).map((tx) => (
                           <option key={tx.id} value={tx.receiptRef}>
-                            {tx.businessUnit}: {tx.description.slice(0, 24)}... ({tx.receiptRef})
+                            {tx.businessUnit}: {tx.receiptRef}
                           </option>
                         ))}
                       </select>
                     </div>
                   </div>
 
-                  {/* Quick Suggestion Chips */}
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block">
-                      Quick Suggestions (Tap to prefill)
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {quickSubjects.map((qs, i) => (
-                        <button
-                          type="button"
-                          key={i}
-                          onClick={() => {
-                            setClaimSubject(qs.text);
-                            setCategory(qs.cat);
-                          }}
-                          className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] rounded-lg transition-colors cursor-pointer truncate max-w-full text-left"
-                        >
-                          + {qs.text}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+
 
                   {/* Case Subject */}
                   <div>
@@ -444,7 +398,7 @@ export const SupportModal: React.FC = () => {
                       placeholder="e.g. Points not credited for Colombo 03 Supermarket bill"
                       value={claimSubject}
                       onChange={(e) => setClaimSubject(e.target.value)}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-slate-800 text-xs"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-slate-800 text-xs font-medium"
                     />
                   </div>
 
@@ -670,21 +624,36 @@ export const SupportModal: React.FC = () => {
           {/* TAB 3: FAQ & CONCIERGE */}
           {supportModalTab === 'FAQ' && (
             <div className="space-y-4">
-              {/* Concierge Banner */}
-              <div className="p-4 bg-gradient-to-br from-slate-900 to-emerald-950 text-white rounded-2xl border border-slate-800 space-y-2">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                  <span className="font-extrabold text-xs text-white">
-                    Hayleys Group Member Concierge
-                  </span>
+              {/* Concierge Banner - Clean, Light & Subtle */}
+              <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl space-y-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/70 shrink-0">
+                    <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-900">
+                      Hayleys Member Concierge
+                    </h4>
+                    <span className="text-[10px] text-slate-500">
+                      Dedicated assistance for {customer.tier} members across all 4 sectors
+                    </span>
+                  </div>
                 </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Dedicated customer service desk for {customer.tier} loyalty members across Retail, Leisure, Travels, and Mobility.
-                </p>
-                <div className="pt-2 text-[11px] text-emerald-300 space-y-1 font-mono">
-                  <div>Hotline: +94 11 268 7000 (Mon - Sun, 8:00 - 20:00)</div>
-                  <div>Email: loyalty@hayleys.com</div>
-                  <div>Head Office: 400 Deans Road, Colombo 10, Sri Lanka</div>
+
+                <div className="pt-2 border-t border-slate-200/70 space-y-1.5 text-xs">
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Phone className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                    <span className="font-semibold text-slate-900">+94 11 268 7000</span>
+                    <span className="text-[10px] text-slate-400">(Mon–Sun, 8:00–20:00)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Mail className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                    <span className="text-slate-800 font-medium">loyalty@hayleys.com</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-slate-700">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
+                    <span className="text-slate-600 text-[11px]">400 Deans Road, Colombo 10, Sri Lanka</span>
+                  </div>
                 </div>
               </div>
 

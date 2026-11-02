@@ -94,28 +94,24 @@ interface LoyaltyContextType {
   startCrossBusinessRedemption: (preferredBU?: BusinessUnit) => void;
 }
 
-const STORAGE_KEY = 'hayleys_loyalty_state_v7';
+const STORAGE_KEY = 'hayleys_loyalty_state_v11';
 
 const LoyaltyContext = createContext<LoyaltyContextType | undefined>(undefined);
 
 export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Load saved state or use initial mock data with strict Silver tier enforcement
+  // Load saved state or use initial mock data with strict Gold tier enforcement
   const [customer, setCustomer] = useState<CustomerProfile>(() => {
     try {
       const saved =
         localStorage.getItem(`${STORAGE_KEY}_customer`) ||
-        localStorage.getItem('hayleys_loyalty_state_v6_customer') ||
-        localStorage.getItem('hayleys_loyalty_state_v5_customer') ||
-        localStorage.getItem('hayleys_loyalty_state_v4_customer') ||
-        localStorage.getItem('hayleys_loyalty_state_v3_customer') ||
-        localStorage.getItem('hayleys_loyalty_state_v2_customer') ||
-        localStorage.getItem('hayleys_loyalty_state_v1_customer');
+        localStorage.getItem('hayleys_loyalty_state_v9_customer') ||
+        localStorage.getItem('hayleys_loyalty_state_v8_customer');
       if (saved) {
         const parsed = JSON.parse(saved);
         return {
           ...INITIAL_CUSTOMER,
           ...parsed,
-          tier: 'Silver' as const,
+          tier: 'Gold' as const,
         };
       }
       return INITIAL_CUSTOMER;
@@ -127,7 +123,15 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [wallet, setWallet] = useState<WalletState>(() => {
     try {
       const saved = localStorage.getItem(`${STORAGE_KEY}_wallet`);
-      return saved ? JSON.parse(saved) : INITIAL_WALLET;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...INITIAL_WALLET,
+          ...parsed,
+          availablePoints: parsed.availablePoints === 2505 || parsed.availablePoints === 2450 ? 1551 : (parsed.availablePoints ?? 1551),
+        };
+      }
+      return INITIAL_WALLET;
     } catch {
       return INITIAL_WALLET;
     }
@@ -193,7 +197,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
   });
   const [supportModalTab, setSupportModalTab] = useState<'CREATE' | 'TRACK' | 'FAQ'>('CREATE');
   const [language, setLanguageState] = useState<Language>('EN');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'home' | 'wallet' | 'activity' | 'offers' | 'rewards' | 'profile'>('home');
 
   // Modals
@@ -219,7 +223,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   });
 
-  // Clean up legacy localStorage keys and enforce Silver tier on mount
+  // Clean up legacy localStorage keys and enforce Gold tier on mount
   useEffect(() => {
     try {
       [
@@ -243,8 +247,8 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
       // ignore
     }
 
-    if (customer.tier !== 'Silver') {
-      setCustomer((prev) => ({ ...prev, tier: 'Silver' }));
+    if (customer.tier !== 'Gold') {
+      setCustomer((prev) => ({ ...prev, tier: 'Gold' }));
     }
   }, []);
 
@@ -364,7 +368,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     const newTxn: Transaction = {
       id: `TXN-${Date.now().toString().slice(-4)}`,
-      description: desc.includes('Silver') ? desc : `${desc} (Silver Member)`,
+      description: desc.includes('Gold') ? desc : `${desc} (Gold Member)`,
       businessUnit: bu,
       date: dateStr,
       time: timeStr,
