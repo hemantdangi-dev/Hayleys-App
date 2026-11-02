@@ -139,7 +139,7 @@ export const HomeScreen: React.FC = () => {
                 {t.common.pts}
               </span>
               <span className="text-xs text-slate-400 ml-1 font-mono">
-                ≈ LKR {(wallet.availablePoints * 10).toLocaleString()}
+                ≈ LKR {wallet.availablePoints.toLocaleString()}
               </span>
             </div>
           </div>
@@ -173,8 +173,8 @@ export const HomeScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Streamlined 4-Icon Action Bar */}
-      <div className="grid grid-cols-4 gap-2 text-center">
+      {/* 3. Streamlined 3-Icon Action Bar */}
+      <div className="grid grid-cols-3 gap-2 text-center">
         {/* Action 1: Scan Store QR */}
         <button
           onClick={() => setIsScanQROpen(true)}
@@ -212,22 +212,55 @@ export const HomeScreen: React.FC = () => {
           </div>
           <span className="text-[11px] font-bold text-slate-800">Vouchers</span>
         </button>
+      </div>
 
-        {/* Action 4: Support & Cases */}
-        <button
-          onClick={() => openSupportModal('CREATE')}
-          className="relative p-3 bg-white hover:bg-slate-50 active:scale-98 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer"
+      {/* 4. Quick Highlights: Daily Spin & Win + Case Desk */}
+      <div className="grid grid-cols-2 gap-2 pt-0.5">
+        {/* Lucky Spin Card */}
+        <div
+          onClick={() => setIsGamificationOpen(true)}
+          className="p-3 bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:border-amber-300 transition-all cursor-pointer flex flex-col justify-between active:scale-98"
         >
-          {activeTickets.length > 0 && (
-            <span className="absolute top-1.5 right-1.5 bg-amber-500 text-slate-950 text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
-              {activeTickets.length}
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center font-bold">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+            </div>
+            <span className="text-[9px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/80">
+              {streakWeeks}W Streak
             </span>
-          )}
-          <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center group-hover:scale-105 transition-transform">
-            <FileQuestion className="w-5 h-5 text-slate-700" />
           </div>
-          <span className="text-[11px] font-bold text-slate-800">Support</span>
-        </button>
+          <div className="mt-2.5">
+            <span className="font-bold text-xs text-slate-900 block leading-tight">
+              {dailySpinClaimed ? 'Daily Spin Claimed' : 'Daily Spin & Win'}
+            </span>
+            <span className="text-[10px] text-slate-500 block mt-0.5">
+              {dailySpinClaimed ? 'Check achievements' : 'Up to +150 bonus pts'}
+            </span>
+          </div>
+        </div>
+
+        {/* Active Support Card */}
+        <div
+          onClick={() => openSupportModal(activeTickets.length > 0 ? 'TRACK' : 'CREATE')}
+          className="p-3 bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:border-emerald-300 transition-all cursor-pointer flex flex-col justify-between active:scale-98"
+        >
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
+              <FileQuestion className="w-4 h-4 text-emerald-700" />
+            </div>
+            <span className="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/80">
+              {activeTickets.length > 0 ? `${activeTickets.length} Active` : 'Concierge'}
+            </span>
+          </div>
+          <div className="mt-2.5">
+            <span className="font-bold text-xs text-slate-900 block leading-tight truncate">
+              {activeTickets.length > 0 ? 'Case Desk' : 'Member Services'}
+            </span>
+            <span className="text-[10px] text-slate-500 block mt-0.5 truncate">
+              {supportTickets[0] ? supportTickets[0].subject : 'Missing points claims'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* 4. Participating Sectors (Horizontal Scroll with Real Photos) */}
@@ -288,12 +321,12 @@ export const HomeScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* 5. Featured Promotion: Buy 2, get 100 - Promotion */}
+      {/* 5. Featured Offer: Buy 2, Get 100 Reward Points */}
       {featuredOffer && (
         <div className="space-y-1.5 pt-1">
           <div className="flex items-center justify-between">
             <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-              Featured Promotion
+              Featured Offer
             </h3>
             <button
               onClick={() => setActiveTab('offers')}
@@ -320,7 +353,7 @@ export const HomeScreen: React.FC = () => {
               {/* Badges */}
               <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
                 <span className="text-[9px] font-extrabold uppercase bg-amber-400 text-amber-950 px-2 py-0.5 rounded-md shadow-xs">
-                  {featuredOffer.businessUnit} PROMO
+                  {featuredOffer.businessUnit}
                 </span>
                 <span className="text-[9px] font-extrabold bg-emerald-700 text-white px-2 py-0.5 rounded-md shadow-xs">
                   {featuredOffer.discountOrBonus}
@@ -383,54 +416,7 @@ export const HomeScreen: React.FC = () => {
         </div>
       )}
 
-      {/* 7. Quick Highlights: Lucky Wheel & Active Support Case */}
-      <div className="grid grid-cols-2 gap-2 pt-1">
-        {/* Lucky Spin Card */}
-        <div
-          onClick={() => setIsGamificationOpen(true)}
-          className="p-3 bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:border-amber-300 transition-all cursor-pointer flex flex-col justify-between active:scale-98"
-        >
-          <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center font-bold">
-              <Sparkles className="w-4 h-4 text-amber-600" />
-            </div>
-            <span className="text-[9px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/80">
-              {streakWeeks}W Streak
-            </span>
-          </div>
-          <div className="mt-2.5">
-            <span className="font-bold text-xs text-slate-900 block leading-tight">
-              {dailySpinClaimed ? 'Daily Spin Claimed' : 'Daily Spin & Win'}
-            </span>
-            <span className="text-[10px] text-slate-500 block mt-0.5">
-              {dailySpinClaimed ? 'Check achievements' : 'Up to +150 bonus pts'}
-            </span>
-          </div>
-        </div>
 
-        {/* Active Support Card */}
-        <div
-          onClick={() => openSupportModal(activeTickets.length > 0 ? 'TRACK' : 'CREATE')}
-          className="p-3 bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:border-emerald-300 transition-all cursor-pointer flex flex-col justify-between active:scale-98"
-        >
-          <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
-              <FileQuestion className="w-4 h-4 text-emerald-700" />
-            </div>
-            <span className="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/80">
-              {activeTickets.length > 0 ? `${activeTickets.length} Active` : 'Concierge'}
-            </span>
-          </div>
-          <div className="mt-2.5">
-            <span className="font-bold text-xs text-slate-900 block leading-tight truncate">
-              {activeTickets.length > 0 ? 'Case Desk' : 'Member Services'}
-            </span>
-            <span className="text-[10px] text-slate-500 block mt-0.5 truncate">
-              {supportTickets[0] ? supportTickets[0].subject : 'Missing points claims'}
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* 8. Personalized Offers (Scannable Cards) */}
       <div className="space-y-2 pt-1">

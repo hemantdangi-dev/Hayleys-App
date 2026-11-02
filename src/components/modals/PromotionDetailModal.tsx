@@ -89,7 +89,7 @@ export const PromotionDetailModal: React.FC = () => {
             <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
               <span className="text-[10px] font-extrabold uppercase bg-emerald-700/90 text-white px-2.5 py-1 rounded-lg backdrop-blur-xs shadow-xs flex items-center gap-1">
                 <Icon className="w-3 h-3" />
-                <span>{selectedPromotion.businessUnit} PROMOTION</span>
+                <span>{selectedPromotion.businessUnit} REWARDS</span>
               </span>
               <span className="text-[10px] font-extrabold bg-amber-400 text-amber-950 px-2 py-1 rounded-lg flex items-center gap-1 shadow-xs">
                 <Sparkles className="w-2.5 h-2.5" />

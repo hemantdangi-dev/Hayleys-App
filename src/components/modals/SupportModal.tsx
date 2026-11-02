@@ -24,6 +24,7 @@ import {
   Phone,
   Mail,
   MapPin,
+  Trash2,
 } from 'lucide-react';
 import { useLoyalty } from '../../context/LoyaltyContext';
 import { SupportTicket } from '../../types';
@@ -38,11 +39,13 @@ export const SupportModal: React.FC = () => {
     supportTickets,
     submitSupportTicket,
     updateTicketStatus,
+    deleteSupportTicket,
     customer,
   } = useLoyalty();
 
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   const [ticketFilter, setTicketFilter] = useState<'ALL' | 'ACTIVE' | 'RESOLVED'>('ALL');
+  const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
 
   // New Case form state
   const [category, setCategory] = useState<SupportTicket['category']>('MISSING_POINTS');
@@ -504,19 +507,27 @@ export const SupportModal: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {filteredTickets.map((ticket) => {
                     const isResolved = ticket.status === 'RESOLVED';
                     const isInReview = ticket.status === 'IN_REVIEW';
+                    const isExpanded = expandedTicketId === ticket.id;
 
                     return (
                       <div
                         key={ticket.id}
-                        className="p-4 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl shadow-xs space-y-2.5 transition-all"
+                        className={`bg-white border rounded-2xl shadow-xs transition-all overflow-hidden ${
+                          isExpanded
+                            ? 'border-emerald-500/50 ring-1 ring-emerald-500/20'
+                            : 'border-slate-200 hover:border-slate-300'
+                        }`}
                       >
-                        {/* Top Row: Case ID, Category, Priority, and Status */}
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
+                        {/* Clickable Header Row: Always visible */}
+                        <div
+                          onClick={() => setExpandedTicketId(isExpanded ? null : ticket.id)}
+                          className="p-3.5 flex items-start justify-between gap-2.5 cursor-pointer hover:bg-slate-50/70 transition-colors"
+                        >
+                          <div className="flex-1 min-w-0 space-y-1">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span className="font-mono font-extrabold text-xs text-slate-900">
                                 {ticket.id}
@@ -530,89 +541,127 @@ export const SupportModal: React.FC = () => {
                                 </span>
                               )}
                             </div>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">
+
+                            <h4 className="font-bold text-xs text-slate-900 leading-snug truncate">
+                              {ticket.subject}
+                            </h4>
+
+                            <span className="text-[10px] text-slate-400 block">
                               Submitted: {ticket.date}
                             </span>
                           </div>
 
-                          {/* Status Pill */}
-                          <div>
+                          {/* Status Pill & Expand Chevron */}
+                          <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
                             {isResolved ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-700" />
                                 RESOLVED
                               </span>
                             ) : isInReview ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
                                 <Clock className="w-3 h-3 text-blue-700 animate-pulse" />
                                 IN REVIEW
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
                                 <Clock className="w-3 h-3 text-amber-700" />
                                 RECEIVED
                               </span>
                             )}
+
+                            <div className="p-1 rounded-lg text-slate-400 hover:text-slate-700">
+                              {isExpanded ? (
+                                <ChevronUp className="w-4 h-4 text-emerald-700" />
+                              ) : (
+                                <ChevronDown className="w-4 h-4" />
+                              )}
+                            </div>
                           </div>
                         </div>
 
-                        {/* Subject & Description */}
-                        <div>
-                          <h4 className="font-bold text-xs text-slate-900 leading-snug">
-                            {ticket.subject}
-                          </h4>
-                          {ticket.message && (
-                            <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                              {ticket.message}
-                            </p>
-                          )}
-                          {ticket.transactionRef && (
-                            <div className="mt-1 text-[10px] text-slate-500 font-mono">
-                              Invoice / Txn Ref: <strong className="text-slate-700">{ticket.transactionRef}</strong>
-                            </div>
-                          )}
-                          {ticket.attachmentName && (
-                            <div className="mt-1 flex items-center gap-1 text-[10px] text-emerald-700 font-medium">
-                              <Paperclip className="w-3 h-3" />
-                              <span>Attached: {ticket.attachmentName}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Resolution / Agent Notes */}
-                        {ticket.resolutionNotes && (
-                          <div className="p-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[11px] space-y-0.5">
-                            <span className="font-bold text-slate-700 block text-[10px] uppercase tracking-wide">
-                              Officer Resolution Notes:
-                            </span>
-                            <p className="text-slate-600 leading-relaxed">
-                              {ticket.resolutionNotes}
-                            </p>
-                            {ticket.updatedAt && (
-                              <span className="text-[9px] text-slate-400 block pt-0.5">
-                                Last updated at {ticket.updatedAt}
+                        {/* Expandable Case Details: Visible when clicked */}
+                        {isExpanded && (
+                          <div className="p-3.5 pt-0 space-y-3 border-t border-slate-100 bg-slate-50/40 animate-fade-in text-xs">
+                            {/* Full Message / Inquiry Notes */}
+                            <div className="pt-2">
+                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                                Case Description & Notes:
                               </span>
+                              <p className="text-[11px] text-slate-700 bg-white p-2.5 rounded-xl border border-slate-200/80 leading-relaxed">
+                                {ticket.message || 'No additional details provided.'}
+                              </p>
+                            </div>
+
+                            {/* Metadata Strip */}
+                            <div className="grid grid-cols-2 gap-2 text-[11px]">
+                              {ticket.transactionRef && (
+                                <div className="p-2 bg-white border border-slate-200/80 rounded-xl">
+                                  <span className="text-[10px] text-slate-400 block">Transaction Ref:</span>
+                                  <strong className="font-mono text-slate-800">{ticket.transactionRef}</strong>
+                                </div>
+                              )}
+                              {ticket.attachmentName && (
+                                <div className="p-2 bg-white border border-slate-200/80 rounded-xl flex items-center gap-1.5 text-emerald-800">
+                                  <Paperclip className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                                  <span className="truncate font-medium">{ticket.attachmentName}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Resolution / Agent Notes */}
+                            {ticket.resolutionNotes && (
+                              <div className="p-2.5 bg-emerald-50/60 border border-emerald-200/80 rounded-xl text-[11px] space-y-0.5">
+                                <span className="font-bold text-emerald-900 block text-[10px] uppercase tracking-wide">
+                                  Support Desk Resolution:
+                                </span>
+                                <p className="text-emerald-950 leading-relaxed">
+                                  {ticket.resolutionNotes}
+                                </p>
+                                {ticket.updatedAt && (
+                                  <span className="text-[9px] text-emerald-800/70 block pt-0.5">
+                                    Updated at {ticket.updatedAt}
+                                  </span>
+                                )}
+                              </div>
                             )}
+
+                            {/* Clean Action Bar: Status Toggle & Delete Case */}
+                            <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between gap-2">
+                              {/* Status progression button without the old description */}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCycleDemoStatus(ticket);
+                                }}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900 rounded-xl text-[11px] font-bold transition-colors cursor-pointer shadow-2xs"
+                              >
+                                <RefreshCw className="w-3 h-3 text-slate-500" />
+                                <span>
+                                  {isResolved ? 'Re-open Case' : isInReview ? 'Mark as Resolved' : 'Mark In-Review'}
+                                </span>
+                              </button>
+
+                              {/* Delete Case button */}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteSupportTicket(ticket.id);
+                                  if (expandedTicketId === ticket.id) {
+                                    setExpandedTicketId(null);
+                                  }
+                                }}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-xl text-[11px] font-bold transition-colors cursor-pointer shadow-2xs"
+                                title="Delete this support case"
+                              >
+                                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                                <span>Delete Case</span>
+                              </button>
+                            </div>
                           </div>
                         )}
-
-                        {/* Demo Action: Cycle status */}
-                        <div className="pt-1 border-t border-slate-100 flex items-center justify-between">
-                          <span className="text-[10px] text-slate-400 italic">
-                            Client demo status progression:
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCycleDemoStatus(ticket)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-[10px] font-bold transition-colors cursor-pointer"
-                            title="Cycle status for client demonstration"
-                          >
-                            <RefreshCw className="w-3 h-3" />
-                            <span>
-                              Simulate: {isResolved ? 'Re-open' : isInReview ? 'Mark Resolved' : 'Mark In-Review'}
-                            </span>
-                          </button>
-                        </div>
                       </div>
                     );
                   })}

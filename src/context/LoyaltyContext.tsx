@@ -90,11 +90,12 @@ interface LoyaltyContextType {
     attachmentName?: string
   ) => string;
   updateTicketStatus: (ticketId: string, status: SupportTicket['status'], resolutionNotes?: string) => void;
+  deleteSupportTicket: (ticketId: string) => void;
   resetDemoData: () => void;
   startCrossBusinessRedemption: (preferredBU?: BusinessUnit) => void;
 }
 
-const STORAGE_KEY = 'hayleys_loyalty_state_v11';
+const STORAGE_KEY = 'hayleys_loyalty_state_v12';
 
 const LoyaltyContext = createContext<LoyaltyContextType | undefined>(undefined);
 
@@ -458,6 +459,10 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
     );
   };
 
+  const deleteSupportTicket = (ticketId: string) => {
+    setSupportTickets((prev) => prev.filter((t) => t.id !== ticketId));
+  };
+
   const spinLuckyWheel = (points: number, label: string) => {
     setDailySpinClaimed(true);
     simulateEarn('LEISURE', points, `Gamification Daily Lucky Wheel (+${points} pts · ${label})`);
@@ -565,6 +570,7 @@ export const LoyaltyProvider: React.FC<{ children: ReactNode }> = ({ children })
         markVoucherUsed,
         submitSupportTicket,
         updateTicketStatus,
+        deleteSupportTicket,
         resetDemoData,
         startCrossBusinessRedemption,
       }}

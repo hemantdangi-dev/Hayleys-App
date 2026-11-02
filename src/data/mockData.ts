@@ -381,10 +381,10 @@ export const ALL_REWARDS: Reward[] = [
 export const ALL_OFFERS: Offer[] = [
   {
     id: 'OFF-BUY2-GET100',
-    title: 'Buy 2, get 100 - Promotion',
+    title: 'Buy 2, Get 100 Reward Points',
     businessUnit: 'RETAIL',
     discountOrBonus: '+100 Pts',
-    category: 'Promotional',
+    category: 'Reward Points',
     validUntil: '31 Dec 2026',
     image: '/src/assets/images/promo_buy2_get100_1793353331701.jpg',
     description: 'Buy any 2 qualifying items across Hayleys Retail Supermarkets and instantly receive 100 bonus loyalty points credited to your Gold card account.',
@@ -617,17 +617,6 @@ export const INITIAL_SUPPORT_TICKETS: SupportTicket[] = [
     status: 'RESOLVED',
     priority: 'NORMAL',
     resolutionNotes: 'Receipt verified with Hayleys Retail Kollupitiya POS system. 350 points successfully credited to shared wallet.',
-  },
-  {
-    id: 'CAS-2026-92184',
-    date: '29 Oct 2026',
-    subject: 'Change Money: Cash change round-up verification (LKR 80.00)',
-    category: 'CHANGE_MONEY',
-    transactionRef: 'CM-1002',
-    message: 'Cashier rounded up cash change at checkout counter 3. Requesting ledger confirmation.',
-    status: 'IN_REVIEW',
-    priority: 'URGENT',
-    resolutionNotes: 'Case assigned to Retail POS reconciliation officer. Store verification in progress.',
   },
 ];
 

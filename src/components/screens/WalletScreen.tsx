@@ -110,7 +110,7 @@ export const WalletScreen: React.FC = () => {
                   {t.common.pts}
                 </span>
                 <span className="text-xs text-slate-400 ml-1 font-mono">
-                  ≈ LKR {(wallet.availablePoints * 10).toLocaleString()}
+                  ≈ LKR {wallet.availablePoints.toLocaleString()}
                 </span>
               </div>
             </div>
