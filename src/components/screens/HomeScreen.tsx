@@ -128,9 +128,6 @@ export const HomeScreen: React.FC = () => {
 
           {/* Point Balance */}
           <div>
-            <span className="text-[11px] text-slate-300 font-medium block">
-              Unified Point Balance (Shared across 4 Sectors)
-            </span>
             <div className="flex items-baseline gap-2 mt-0.5">
               <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight tabular-nums">
                 {wallet.availablePoints.toLocaleString()}
